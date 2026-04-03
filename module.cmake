@@ -4,11 +4,10 @@ set(MODULE_PREFIX "DekiInput")
 set(MODULE_UPPER "INPUT")
 set(MODULE_TARGET "deki-input")
 set(MODULE_FILE_PREFIX "Input")
-set(MODULE_CORE_SOURCES
-    InputDispatch.cpp
-)
 set(MODULE_SOURCES
+    InputDispatch.cpp
     InputCollider.cpp
     DekiInputSystem.cpp
 )
 set(MODULE_ENTRY DekiInputModule.cpp)
+set(MODULE_LINK_DEPS deki-rendering)
