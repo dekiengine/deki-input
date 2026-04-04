@@ -8,7 +8,7 @@
 
 #include "DekiInputModule.h"
 #include "interop/DekiPlugin.h"
-#include "modules/DekiModuleFeatureMeta.h"
+#include "DekiModuleFeatureMeta.h"
 #include "InputCollider.h"
 #include "DekiInputSystem.h"
 #include "DekiEngine.h"

@@ -6,7 +6,7 @@
 
 #include "DekiComponent.h"
 #include "reflection/DekiProperty.h"
-#include "modules/2d/Bounds2D.h"
+#include "deki-2d/Bounds2D.h"
 
 class DekiObject;
 

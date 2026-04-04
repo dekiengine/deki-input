@@ -3,7 +3,7 @@
 #include "DekiEngine.h"
 #include "DekiObject.h"
 #include "Prefab.h"
-#include "modules/rendering/CameraComponent.h"
+#include "deki-rendering/CameraComponent.h"
 #include "providers/DekiInputProvider.h"
 #include "providers/IDekiRenderSystem.h"
 
