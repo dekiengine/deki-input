@@ -4,7 +4,7 @@
 
 // Module export macro for deki-input
 #if defined(_WIN32) || defined(_WIN64)
-    #if defined(DEKI_INPUT_EXPORTS) || defined(DEKI_ENGINE_EXPORTS)
+    #if defined(DEKI_INPUT_EXPORTS) || defined(DEKI_ENGINE_EXPORTS) || defined(DEKI_PLUGIN_EXPORTS)
         #define DEKI_INPUT_API __declspec(dllexport)
     #else
         #define DEKI_INPUT_API __declspec(dllimport)
