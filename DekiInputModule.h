@@ -13,7 +13,7 @@
 // DLL export macro
 #ifdef DEKI_EDITOR
     #ifdef _WIN32
-        #ifdef DEKI_INPUT_EXPORTS
+        #if defined(DEKI_INPUT_EXPORTS) || defined(DEKI_PLUGIN_EXPORTS)
             #define DEKI_INPUT_API __declspec(dllexport)
         #else
             #define DEKI_INPUT_API __declspec(dllimport)
