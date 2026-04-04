@@ -100,6 +100,8 @@ DEKI_PLUGIN_API void DekiPlugin_RegisterComponents(void)
     DekiInput_EnsureRegistered();
 }
 
+#endif // DEKI_PLUGIN_EXPORTS (resume after feature data)
+
 // =============================================================================
 // Module Feature API
 // =============================================================================
@@ -110,6 +112,7 @@ static const DekiModuleFeatureInfo s_Features[] = {
     {"input", "Input", "Input dispatch with InputCollider hit areas", true, "DEKI_FEATURE_INPUT", s_InputGuids, 1},
 };
 
+#ifndef DEKI_PLUGIN_EXPORTS
 DEKI_PLUGIN_API int DekiPlugin_GetFeatureCount(void)
 {
     return sizeof(s_Features) / sizeof(s_Features[0]);
