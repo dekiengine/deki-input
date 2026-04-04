@@ -1,7 +1,8 @@
 {
-  "id": "deki:input",
+  "id": "deki-input",
   "displayName": "Input",
   "buildDefine": "DEKI_MODULE_INPUT",
+  "requires": ["deki-rendering"],
   "features": [
     {
       "id": "input",
