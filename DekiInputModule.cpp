@@ -53,6 +53,7 @@ DEKI_INPUT_API int DekiInput_EnsureRegistered(void)
 
 extern "C" {
 
+#ifndef DEKI_PLUGIN_EXPORTS
 DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)
 {
     return "Deki Input Module";
@@ -121,6 +122,8 @@ DEKI_PLUGIN_API const DekiModuleFeatureInfo* DekiPlugin_GetFeature(int index)
     return &s_Features[index];
 }
 
+#endif // DEKI_PLUGIN_EXPORTS
+
 // =============================================================================
 // Module-specific feature API
 // =============================================================================
@@ -132,12 +135,14 @@ DEKI_INPUT_API const char* DekiInput_GetName(void)
 
 DEKI_INPUT_API int DekiInput_GetFeatureCount(void)
 {
-    return DekiPlugin_GetFeatureCount();
+    return static_cast<int>(sizeof(s_Features) / sizeof(s_Features[0]));
 }
 
 DEKI_INPUT_API const DekiModuleFeatureInfo* DekiInput_GetFeature(int index)
 {
-    return DekiPlugin_GetFeature(index);
+    if (index < 0 || index >= DekiInput_GetFeatureCount())
+        return nullptr;
+    return &s_Features[index];
 }
 
 } // extern "C"
