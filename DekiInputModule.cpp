@@ -17,7 +17,8 @@
 
 #ifdef DEKI_EDITOR
 
-// Auto-generated registration helpers
+#ifndef DEKI_PLUGIN_EXPORTS
+// Auto-generated registration helpers (standalone DLL only)
 extern void DekiInput_RegisterComponents();
 extern int DekiInput_GetAutoComponentCount();
 extern const DekiComponentMeta* DekiInput_GetAutoComponentMeta(int index);
@@ -46,6 +47,7 @@ DEKI_INPUT_API int DekiInput_EnsureRegistered(void)
 }
 
 } // extern "C"
+#endif // DEKI_PLUGIN_EXPORTS
 
 // =============================================================================
 // Plugin metadata (for dynamic loading compatibility)
