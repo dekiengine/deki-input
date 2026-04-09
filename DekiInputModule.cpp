@@ -10,7 +10,7 @@
 #include "interop/DekiPlugin.h"
 #include "DekiModuleFeatureMeta.h"
 #include "InputCollider.h"
-#include "DekiInputSystem.h"
+#include "DekiInputInit.h"
 #include "DekiEngine.h"
 #include "reflection/ComponentRegistry.h"
 #include "reflection/ComponentFactory.h"
@@ -25,7 +25,6 @@ extern const DekiComponentMeta* DekiInput_GetAutoComponentMeta(int index);
 
 // Track if already registered to avoid duplicates
 static bool s_InputRegistered = false;
-static DekiInputSystem s_InputSystem;
 
 extern "C" {
 
@@ -40,8 +39,9 @@ DEKI_INPUT_API int DekiInput_EnsureRegistered(void)
 
     DekiInput_RegisterComponents();
 
-    // Register input system on DekiEngine (accessible via GetInputSystem())
-    DekiEngine::GetInstance().SetInputSystem(&s_InputSystem);
+    // Initialize input system (idempotent — may already be initialized
+    // by deki_init_module_systems() during DekiEngine::Initialize())
+    DekiInput_InitSystem();
 
     return DekiInput_GetAutoComponentCount();
 }
@@ -82,8 +82,7 @@ DEKI_PLUGIN_API int DekiPlugin_Init(void)
 
 DEKI_PLUGIN_API void DekiPlugin_Shutdown(void)
 {
-    s_InputSystem.Shutdown();
-    DekiEngine::GetInstance().SetInputSystem(nullptr);
+    DekiInput_ShutdownSystem();
     s_InputRegistered = false;
 }
 

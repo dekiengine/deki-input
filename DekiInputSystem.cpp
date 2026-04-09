@@ -51,11 +51,21 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
     if (!isDown && !isMove && !isUp)
         return;
 
-    // Find camera for screen-to-world coordinate conversion
+    // Find camera for screen-to-world coordinate conversion (search recursively)
     CameraComponent* cam = nullptr;
+    std::function<CameraComponent*(DekiObject*)> findCamera = [&](DekiObject* obj) -> CameraComponent* {
+        CameraComponent* c = obj->GetComponent<CameraComponent>();
+        if (c) return c;
+        for (auto* child : obj->GetChildren())
+        {
+            c = findCamera(child);
+            if (c) return c;
+        }
+        return nullptr;
+    };
     for (DekiObject* obj : prefab->GetObjects())
     {
-        cam = obj->GetComponent<CameraComponent>();
+        cam = findCamera(obj);
         if (cam) break;
     }
 
