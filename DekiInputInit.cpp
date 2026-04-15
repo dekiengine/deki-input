@@ -14,7 +14,7 @@ void DekiInput_InitSystem()
     s_InputSystem->Initialize();
     DekiEngine::GetInstance().SetInputSystem(s_InputSystem);
 
-    DEKI_LOG_DEBUG("DekiInput: Input system initialized");
+    DEKI_LOG_INTERNAL("DekiInput: Input system initialized");
 }
 
 void DekiInput_ShutdownSystem()
@@ -27,5 +27,5 @@ void DekiInput_ShutdownSystem()
     delete s_InputSystem;
     s_InputSystem = nullptr;
 
-    DEKI_LOG_DEBUG("DekiInput: Input system shutdown");
+    DEKI_LOG_INTERNAL("DekiInput: Input system shutdown");
 }

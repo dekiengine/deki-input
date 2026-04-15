@@ -58,6 +58,14 @@ bool InputCollider::ProcessInput(int32_t x, int32_t y, bool down, bool move, boo
         handled = true;
     }
 
+    // Pointer up — clear hover state (touch devices have no hover after release)
+    if (up && m_PointerInside)
+    {
+        m_PointerInside = false;
+        InvokeCallbacks(on_pointer_exit, x, y);
+        handled = true;
+    }
+
     // Pointer enter/exit (hover tracking)
     if (move || down)
     {

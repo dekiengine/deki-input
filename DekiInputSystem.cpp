@@ -31,6 +31,11 @@ void DekiInputSystem::Initialize()
 
 void DekiInputSystem::Shutdown()
 {
+    // Clear callbacks BEFORE DLL unload — the std::function objects in
+    // DekiInputProvider::global_callbacks hold lambdas whose code lives
+    // in this DLL. After FreeLibrary, those function pointers are stale
+    // and any operation on them (move, copy, destroy) will crash.
+    DekiInputProvider::ClearEventCallbacks();
     m_Initialized = false;
 }
 
