@@ -17,18 +17,22 @@ class DekiObject;
  * callbacks when pointer events occur. Other components (ButtonComponent,
  * ScrollComponent, etc.) register callbacks to react to input.
  *
+ * Coordinates are in WORLD UNITS (float). The dispatch system converts raw
+ * device pixels → world units once at the input boundary, so colliders work
+ * correctly under any camera PPM/zoom.
+ *
  * Subclass and override HitTest() for custom shapes (circle, polygon, etc.).
  *
  * Usage:
  * @code
  * // Add InputCollider to make an object interactive
  * auto* collider = obj->AddComponent<InputCollider>();
- * collider->width = 100;
- * collider->height = 40;
+ * collider->width = 100.0f;
+ * collider->height = 40.0f;
  *
  * // Register callbacks
- * collider->on_pointer_down.push_back([](int32_t x, int32_t y) {
- *     // Handle press
+ * collider->on_pointer_down.push_back([](float x, float y) {
+ *     // Handle press (x/y in world units)
  * });
  * @endcode
  */
@@ -37,25 +41,25 @@ class InputCollider : public DekiComponent
     DEKI_COMPONENT(InputCollider, DekiComponent, "Input", "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "DEKI_FEATURE_INPUT")
 
 public:
-    // Hit area dimensions
+    // Hit area dimensions (world units)
     DEKI_EXPORT
-    int32_t width = 0;
+    float width = 0.0f;
 
     DEKI_EXPORT
-    int32_t height = 0;
+    float height = 0.0f;
 
-    // Hit area padding (expands the hit area beyond width/height)
+    // Hit area padding (world units, expands the hit area beyond width/height)
     DEKI_EXPORT
-    int32_t padding_left = 0;
-
-    DEKI_EXPORT
-    int32_t padding_right = 0;
+    float padding_left = 0.0f;
 
     DEKI_EXPORT
-    int32_t padding_top = 0;
+    float padding_right = 0.0f;
 
     DEKI_EXPORT
-    int32_t padding_bottom = 0;
+    float padding_top = 0.0f;
+
+    DEKI_EXPORT
+    float padding_bottom = 0.0f;
 
     // When true, blocks input from reaching child objects
     DEKI_EXPORT
@@ -64,7 +68,7 @@ public:
     // --- Pointer event callbacks ---
     // Components register these in Start() to react to input
 
-    using PointerCallback = std::function<void(int32_t x, int32_t y)>;
+    using PointerCallback = std::function<void(float x, float y)>;
 
     std::vector<PointerCallback> on_pointer_down;
     std::vector<PointerCallback> on_pointer_up;
@@ -82,21 +86,21 @@ public:
      * Override in subclasses for custom shapes (circle, polygon, etc.).
      * Default implementation: axis-aligned box with padding.
      *
-     * @param x World X coordinate
-     * @param y World Y coordinate
+     * @param x World X coordinate (units)
+     * @param y World Y coordinate (units)
      * @return true if the point is inside the collider
      */
-    virtual bool HitTest(int32_t x, int32_t y) const;
+    virtual bool HitTest(float x, float y) const;
 
     /**
      * @brief Process an input event
      *
      * Called by DekiInputSystem. Performs hit test, tracks pointer state,
-     * and fires appropriate callbacks.
+     * and fires appropriate callbacks. x/y are in world units.
      *
      * @return true if the event was handled (hit test passed and callbacks fired)
      */
-    bool ProcessInput(int32_t x, int32_t y, bool down, bool move, bool up);
+    bool ProcessInput(float x, float y, bool down, bool move, bool up);
 
     /**
      * @brief Cancel any active input state
@@ -109,14 +113,17 @@ public:
 
     /**
      * @brief Get the Bounds2D for this collider (for editor visualization)
+     *
+     * Bounds2D is integer-pixel for editor screen-space drawing. We round
+     * collider dims to ints here; for sub-pixel collider math, use HitTest.
      */
     Bounds2D GetBounds() const
     {
-        Bounds2D b(width, height);
-        b.padding_left = padding_left;
-        b.padding_right = padding_right;
-        b.padding_top = padding_top;
-        b.padding_bottom = padding_bottom;
+        Bounds2D b(static_cast<int32_t>(width), static_cast<int32_t>(height));
+        b.padding_left = static_cast<int32_t>(padding_left);
+        b.padding_right = static_cast<int32_t>(padding_right);
+        b.padding_top = static_cast<int32_t>(padding_top);
+        b.padding_bottom = static_cast<int32_t>(padding_bottom);
         return b;
     }
 
@@ -128,7 +135,7 @@ private:
     bool m_PointerInside = false;
     bool m_Pressed = false;
 
-    void InvokeCallbacks(const std::vector<PointerCallback>& callbacks, int32_t x, int32_t y);
+    void InvokeCallbacks(const std::vector<PointerCallback>& callbacks, float x, float y);
 };
 
 // Generated property metadata (after class definition for offsetof)

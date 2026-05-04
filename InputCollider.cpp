@@ -4,35 +4,39 @@
 #include <cmath>
 
 InputCollider::InputCollider()
-    : width(0),
-      height(0),
-      padding_left(0),
-      padding_right(0),
-      padding_top(0),
-      padding_bottom(0),
+    : width(0.0f),
+      height(0.0f),
+      padding_left(0.0f),
+      padding_right(0.0f),
+      padding_top(0.0f),
+      padding_bottom(0.0f),
       consume_input(true)
 {
 }
 
-bool InputCollider::HitTest(int32_t x, int32_t y) const
+bool InputCollider::HitTest(float x, float y) const
 {
     DekiObject* owner = GetOwner();
     if (!owner)
         return false;
 
-    float ownerX = owner->GetWorldX();
-    float ownerY = owner->GetWorldY();
+    const float ownerX = owner->GetWorldX();
+    const float ownerY = owner->GetWorldY();
 
-    // Convert world coordinates (Y-up, center origin) to bounds coordinates
-    // (Y-down, top-left origin). Object position is the visual center (pivot 0.5).
-    Bounds2D bounds = GetBounds();
-    return bounds.Contains(
-        static_cast<int32_t>(x - ownerX) + width / 2,
-        static_cast<int32_t>(ownerY - y) + height / 2
-    );
+    // Convert world coordinates (Y-up, center origin) to bounds-local coords
+    // (Y-down, top-left origin). Object position is the visual center
+    // (pivot 0.5), so the box spans (ownerX - w/2, ownerY + h/2) to
+    // (ownerX + w/2, ownerY - h/2) in world (Y-up) terms.
+    const float localX = (x - ownerX) + width  * 0.5f;
+    const float localY = (ownerY - y) + height * 0.5f;
+
+    return localX >= -padding_left  &&
+           localX <= width  + padding_right &&
+           localY >= -padding_top   &&
+           localY <= height + padding_bottom;
 }
 
-bool InputCollider::ProcessInput(int32_t x, int32_t y, bool down, bool move, bool up)
+bool InputCollider::ProcessInput(float x, float y, bool down, bool move, bool up)
 {
     // If another component has claimed the gesture (e.g. scroll is dragging),
     // suppress all input on consuming colliders — no hover, no press, nothing.
@@ -105,12 +109,12 @@ void InputCollider::CancelInput()
     m_PointerInside = false;
 
     if (wasPressed)
-        InvokeCallbacks(on_pointer_up, 0, 0);
+        InvokeCallbacks(on_pointer_up, 0.0f, 0.0f);
     if (wasInside)
-        InvokeCallbacks(on_pointer_exit, 0, 0);
+        InvokeCallbacks(on_pointer_exit, 0.0f, 0.0f);
 }
 
-void InputCollider::InvokeCallbacks(const std::vector<PointerCallback>& callbacks, int32_t x, int32_t y)
+void InputCollider::InvokeCallbacks(const std::vector<PointerCallback>& callbacks, float x, float y)
 {
     for (const auto& cb : callbacks)
     {

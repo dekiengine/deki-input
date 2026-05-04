@@ -16,6 +16,10 @@ struct InputEvent;
  * auto-dispatches when input events arrive.
  *
  * For editor play mode: call DispatchInput() directly from PlayViewPanel.
+ *
+ * Coordinates: DispatchInput takes WORLD UNITS (float). Raw device pixels
+ * coming from InputEvent are converted via Camera::ScreenToWorld in
+ * OnInputEvent before reaching dispatch.
  */
 class DekiInputSystem : public IDekiInputSystem
 {
@@ -25,7 +29,7 @@ public:
 
     void Initialize() override;
     void Shutdown() override;
-    void DispatchInput(Prefab* prefab, int32_t x, int32_t y,
+    void DispatchInput(Prefab* prefab, float x, float y,
                        bool down, bool move, bool up) override;
     bool IsInitialized() const override { return m_Initialized; }
 
@@ -45,6 +49,6 @@ private:
      *
      * @return true if input was consumed (a collider with consume_input=true handled it)
      */
-    bool DispatchToObject(DekiObject* obj, int32_t x, int32_t y,
+    bool DispatchToObject(DekiObject* obj, float x, float y,
                           bool down, bool move, bool up);
 };

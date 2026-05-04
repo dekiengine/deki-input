@@ -74,24 +74,21 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
         if (cam) break;
     }
 
-    int32_t x = event.x;
-    int32_t y = event.y;
+    float worldX = static_cast<float>(event.x);
+    float worldY = static_cast<float>(event.y);
 
     if (cam && engine.GetRenderSystem())
     {
-        float worldX, worldY;
-        cam->ScreenToWorld(event.x, event.y,
+        cam->ScreenToWorld(static_cast<float>(event.x), static_cast<float>(event.y),
                            engine.GetRenderSystem()->GetScreenWidth(),
                            engine.GetRenderSystem()->GetScreenHeight(),
                            worldX, worldY);
-        x = static_cast<int32_t>(worldX);
-        y = static_cast<int32_t>(worldY);
     }
 
-    DispatchInput(prefab, x, y, isDown, isMove, isUp);
+    DispatchInput(prefab, worldX, worldY, isDown, isMove, isUp);
 }
 
-void DekiInputSystem::DispatchInput(Prefab* prefab, int32_t x, int32_t y,
+void DekiInputSystem::DispatchInput(Prefab* prefab, float x, float y,
                                      bool down, bool move, bool up)
 {
     if (!prefab)
@@ -103,7 +100,7 @@ void DekiInputSystem::DispatchInput(Prefab* prefab, int32_t x, int32_t y,
     }
 }
 
-bool DekiInputSystem::DispatchToObject(DekiObject* obj, int32_t x, int32_t y,
+bool DekiInputSystem::DispatchToObject(DekiObject* obj, float x, float y,
                                         bool down, bool move, bool up)
 {
     if (!obj)
