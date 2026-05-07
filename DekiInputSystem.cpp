@@ -4,7 +4,7 @@
 #include "DekiObject.h"
 #include "Prefab.h"
 #include "deki-rendering/CameraComponent.h"
-#include "providers/DekiInputProvider.h"
+#include "providers/DekiInput.h"
 #include "providers/IDekiRenderSystem.h"
 
 DekiInputSystem::DekiInputSystem()
@@ -21,8 +21,8 @@ void DekiInputSystem::Initialize()
     if (m_Initialized)
         return;
 
-    // Register callback on DekiInputProvider to receive input events
-    DekiInputProvider::RegisterEventCallback([this](const InputEvent& event) {
+    // Register callback on DekiInput to receive input events
+    DekiInput::RegisterEventCallback([this](const InputEvent& event) {
         OnInputEvent(event);
     });
 
@@ -32,10 +32,10 @@ void DekiInputSystem::Initialize()
 void DekiInputSystem::Shutdown()
 {
     // Clear callbacks BEFORE DLL unload — the std::function objects in
-    // DekiInputProvider::global_callbacks hold lambdas whose code lives
+    // DekiInput::global_callbacks hold lambdas whose code lives
     // in this DLL. After FreeLibrary, those function pointers are stale
     // and any operation on them (move, copy, destroy) will crash.
-    DekiInputProvider::ClearEventCallbacks();
+    DekiInput::ClearEventCallbacks();
     m_Initialized = false;
 }
 

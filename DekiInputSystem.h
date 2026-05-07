@@ -12,7 +12,7 @@ struct InputEvent;
  * Concrete implementation of IDekiInputSystem, lives in the input module DLL.
  * Registered on DekiEngine via SetInputSystem() during module init.
  *
- * For embedded runtime: registers as a callback on DekiInputProvider and
+ * For embedded runtime: registers as a callback on DekiInput and
  * auto-dispatches when input events arrive.
  *
  * For editor play mode: call DispatchInput() directly from PlayViewPanel.
@@ -37,7 +37,7 @@ private:
     bool m_Initialized = false;
 
     /**
-     * @brief Callback from DekiInputProvider — converts screen→world and dispatches
+     * @brief Callback from DekiInput — converts screen→world and dispatches
      */
     void OnInputEvent(const InputEvent& event);
 
