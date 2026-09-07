@@ -216,8 +216,8 @@ bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y,
     // Phase 2: Process this object's InputCollider
     for (Deki::Component* comp : obj->GetComponents())
     {
-        if (comp->GetType() == InputCollider::StaticType ||
-            comp->GetBaseType() == InputCollider::StaticType)
+        if (comp->GetType() == ::Deki::TypeId<InputCollider>() ||
+            comp->GetBaseType() == ::Deki::TypeId<InputCollider>())
         {
             auto* collider = static_cast<InputCollider*>(comp);
             // Process if: no child consumed, OR this is a non-consuming collider (e.g. scroll)

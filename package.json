@@ -1,7 +1,7 @@
 {
   "id": "deki-input",
   "displayName": "Input",
-  "minEngine": "0.10.0",
+  "minEngine": "0.11.0",
   "buildDefine": "DEKI_PACKAGE_INPUT",
   "requires": [
     "deki-rendering"
@@ -12,8 +12,8 @@
       "displayName": "Input",
       "buildDefine": "DEKI_FEATURE_INPUT",
       "defaultEnabled": true,
-      "componentGuids": [
-        "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      "componentTypes": [
+        "InputCollider"
       ]
     }
   ],

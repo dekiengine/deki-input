@@ -36,10 +36,10 @@ namespace Deki { class Object; }
  * });
  * @endcode
  */
+DEKI_CATEGORY("Input")
+DEKI_DESCRIPTION("Hit area for pointer and touch. Buttons and scrolls listen to it.")
 class InputCollider : public Deki::Component
 {
-    DEKI_COMPONENT(InputCollider, Deki::Component, "Input", "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "DEKI_FEATURE_INPUT")
-    DEKI_DESCRIPTION("Hit area for pointer and touch. Buttons and scrolls listen to it.")
 
 public:
     // Hit area dimensions (meters)
@@ -146,4 +146,3 @@ private:
 };
 
 // Generated property metadata (after class definition for offsetof)
-#include "generated/InputCollider.gen.h"
