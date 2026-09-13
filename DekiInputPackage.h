@@ -10,20 +10,8 @@
  * - InputDispatch: Gesture claim system (in deki-engine-core)
  */
 
-// DLL export macro
-#ifdef DEKI_EDITOR
-    #ifdef _WIN32
-        #if defined(DEKI_INPUT_EXPORTS) || defined(DEKI_PLUGIN_EXPORTS)
-            #define DEKI_INPUT_API __declspec(dllexport)
-        #else
-            #define DEKI_INPUT_API __declspec(dllimport)
-        #endif
-    #else
-        #define DEKI_INPUT_API
-    #endif
-#else
-    #define DEKI_INPUT_API
-#endif
+// DLL export macro (own header so intra-package headers avoid this aggregator)
+#include "InputApi.h"
 
 // Include all package headers when package is enabled
 #ifdef DEKI_PACKAGE_INPUT
