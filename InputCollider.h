@@ -48,32 +48,39 @@ class InputCollider : public Deki::Component
 public:
     // Hit area dimensions (meters)
     DEKI_EXPORT
+    DEKI_TOOLTIP("Width of the hit area in meters. It does not have to match what is drawn.")
     DEKI_UNIT(Distance)
     float width = 0.0f;
 
     DEKI_EXPORT
+    DEKI_TOOLTIP("Height of the hit area in meters.")
     DEKI_UNIT(Distance)
     float height = 0.0f;
 
     // Hit area padding (meters, expands the hit area beyond width/height)
     DEKI_EXPORT
+    DEKI_TOOLTIP("Extra hit area beyond the left edge, in meters. Useful for making a small control comfortable to hit with a finger without making it look bigger.")
     DEKI_UNIT(Distance)
     float paddingLeft = 0.0f;
 
     DEKI_EXPORT
+    DEKI_TOOLTIP("Extra hit area beyond the right edge, in meters.")
     DEKI_UNIT(Distance)
     float paddingRight = 0.0f;
 
     DEKI_EXPORT
+    DEKI_TOOLTIP("Extra hit area above the top edge, in meters.")
     DEKI_UNIT(Distance)
     float paddingTop = 0.0f;
 
     DEKI_EXPORT
+    DEKI_TOOLTIP("Extra hit area below the bottom edge, in meters.")
     DEKI_UNIT(Distance)
     float paddingBottom = 0.0f;
 
     // When true, blocks input from reaching child objects
     DEKI_EXPORT
+    DEKI_TOOLTIP("Stop the press here instead of letting it reach objects underneath. Turn it off for an overlay that should not block what is behind it.")
     bool consumeInput = true;
 
     // --- Pointer event callbacks ---

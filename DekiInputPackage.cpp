@@ -66,7 +66,7 @@ extern "C" {
 #ifndef DEKI_PLUGIN_EXPORTS
 DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)
 {
-    return "DekiRendering::Deki Input Package";
+    return "Deki Input Package";
 }
 
 DEKI_PLUGIN_API const char* DekiPlugin_GetVersion(void)

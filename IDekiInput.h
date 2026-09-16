@@ -30,7 +30,7 @@ struct InputEvent
 {
     InputEventType type;
     int32_t x, y;  // Position for mouse/touch events
-    uint32_t key;  // DekiTiledMap::Key code for keyboard events
+    uint32_t key;  // Key code for keyboard events
     bool pressed;  // Button/key state
     uint32_t timestamp;  // Event timestamp
 };
