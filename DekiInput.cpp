@@ -1,6 +1,9 @@
 #include "DekiInput.h"
 #include <deki/LogSystem.h>
 
+namespace DekiInput
+{
+
 // Static member definitions
 std::map<std::string, std::unique_ptr<IDekiInput>> DekiInput::s_ActiveInputs;
 std::vector<InputEventCallback> DekiInput::s_GlobalCallbacks;
@@ -178,3 +181,5 @@ void DekiInput::DistributeEvent(const InputEvent& event)
         }
     }
 }
+
+}  // namespace DekiInput

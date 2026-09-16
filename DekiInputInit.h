@@ -1,5 +1,8 @@
 #pragma once
 
+namespace DekiInput
+{
+
 /**
  * @brief Initialize the input system (creates DekiInputSystem, registers with engine).
  *
@@ -10,3 +13,5 @@
  */
 void DekiInput_InitSystem();
 void DekiInput_ShutdownSystem();
+
+}  // namespace DekiInput

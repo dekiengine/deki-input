@@ -3,6 +3,9 @@
 #include <deki/Object.h>
 #include <cmath>
 
+namespace DekiInput
+{
+
 InputCollider::InputCollider()
     : width(0.0f),
       height(0.0f),
@@ -103,7 +106,7 @@ void InputCollider::CancelInput()
     bool wasInside = m_PointerInside;
 
     // Clear all state BEFORE callbacks so handlers see the cancelled state.
-    // Without this, ButtonComponent's onPointerUp handler sees IsPointerInside()
+    // Without this, Deki2D::ButtonComponent's onPointerUp handler sees IsPointerInside()
     // still true and fires a spurious on_click.
     m_Pressed = false;
     m_PointerInside = false;
@@ -121,3 +124,5 @@ void InputCollider::InvokeCallbacks(const std::vector<PointerCallback>& callback
         if (cb) cb(x, y);
     }
 }
+
+}  // namespace DekiInput

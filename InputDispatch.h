@@ -4,6 +4,9 @@
 
 #include "InputApi.h"
 
+namespace DekiInput
+{
+
 /**
  * @brief Gesture claim system for input dispatch
  *
@@ -26,3 +29,5 @@ public:
 private:
     static void* s_GestureOwner;
 };
+
+}  // namespace DekiInput

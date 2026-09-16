@@ -7,6 +7,9 @@
 
 #include "IDekiInput.h"
 
+namespace DekiInput
+{
+
 /**
  * @brief Input Provider for handling multiple input implementations
  *
@@ -111,3 +114,5 @@ private:
      */
     static void DistributeEvent(const InputEvent& event);
 };
+
+}  // namespace DekiInput

@@ -10,11 +10,14 @@
 
 namespace Deki { class Object; }
 
+namespace DekiInput
+{
+
 /**
  * @brief Hit area component for pointer/touch input
  *
  * Like Unity's Collider2D — defines a clickable/hoverable area and fires
- * callbacks when pointer events occur. Other components (ButtonComponent,
+ * callbacks when pointer events occur. Other components (Deki2D::ButtonComponent,
  * ScrollComponent, etc.) register callbacks to react to input.
  *
  * Coordinates are in WORLD UNITS (float). The dispatch system converts raw
@@ -38,6 +41,7 @@ namespace Deki { class Object; }
  */
 DEKI_CATEGORY("Input")
 DEKI_DESCRIPTION("Hit area for pointer and touch. Buttons and scrolls listen to it.")
+DEKI_FORMER_NAME("InputCollider")
 class InputCollider : public Deki::Component
 {
 
@@ -119,14 +123,14 @@ public:
     void CancelInput();
 
     /**
-     * @brief Get the Bounds2D for this collider (for editor visualization)
+     * @brief Get the Deki2D::Bounds2D for this collider (for editor visualization)
      *
-     * Bounds2D stores world meters; editor gizmo paths multiply by the camera
+     * Deki2D::Bounds2D stores world meters; editor gizmo paths multiply by the camera
      * ppm to get screen pixels. For sub-pixel collider math use HitTest().
      */
-    Bounds2D GetBounds() const
+    Deki2D::Bounds2D GetBounds() const
     {
-        Bounds2D b(width, height);
+        Deki2D::Bounds2D b(width, height);
         b.paddingLeft = paddingLeft;
         b.paddingRight = paddingRight;
         b.paddingTop = paddingTop;
@@ -146,3 +150,5 @@ private:
 };
 
 // Generated property metadata (after class definition for offsetof)
+
+}  // namespace DekiInput

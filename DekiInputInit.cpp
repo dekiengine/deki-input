@@ -3,6 +3,9 @@
 #include <deki/Engine.h>
 #include <deki/LogSystem.h>
 
+namespace DekiInput
+{
+
 static DekiInputSystem* s_InputSystem = nullptr;
 
 void DekiInput_InitSystem()
@@ -29,3 +32,5 @@ void DekiInput_ShutdownSystem()
 
     DEKI_LOG_INTERNAL("DekiInput: Input system shutdown");
 }
+
+}  // namespace DekiInput

@@ -10,6 +10,9 @@
 #include <map>
 #include <memory>
 
+namespace DekiInput
+{
+
 namespace
 {
 
@@ -139,7 +142,7 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
         return;
 
     // Camera for screen-to-world conversion, cached per scene.
-    CameraComponent* cam = FindCamera(scene);
+    DekiRendering::CameraComponent* cam = FindCamera(scene);
 
     float worldX = static_cast<float>(event.x);
     float worldY = static_cast<float>(event.y);
@@ -155,17 +158,17 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
     DispatchInput(scene, worldX, worldY, isDown, isMove, isUp);
 }
 
-static CameraComponent* FindCameraRecursive(Deki::Object* obj)
+static DekiRendering::CameraComponent* FindCameraRecursive(Deki::Object* obj)
 {
-    if (CameraComponent* c = obj->GetComponent<CameraComponent>())
+    if (DekiRendering::CameraComponent* c = obj->GetComponent<DekiRendering::CameraComponent>())
         return c;
     for (Deki::Object* child : obj->GetChildren())
-        if (CameraComponent* c = FindCameraRecursive(child))
+        if (DekiRendering::CameraComponent* c = FindCameraRecursive(child))
             return c;
     return nullptr;
 }
 
-CameraComponent* DekiInputSystem::FindCamera(Deki::Scene* scene)
+DekiRendering::CameraComponent* DekiInputSystem::FindCamera(Deki::Scene* scene)
 {
     if (m_CachedCameraScene != scene)
     {
@@ -233,3 +236,5 @@ bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y,
 
     return childConsumed;
 }
+
+}  // namespace DekiInput

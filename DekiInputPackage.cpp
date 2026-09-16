@@ -14,16 +14,25 @@
 #include <deki/reflection/ComponentRegistry.h>
 #include <deki/reflection/ComponentFactory.h>
 
-#ifdef DEKI_EDITOR
-
-#ifndef DEKI_PLUGIN_EXPORTS
-// Auto-generated registration helpers (standalone DLL only)
 extern void DekiInput_RegisterComponents();
 extern int DekiInput_GetAutoComponentCount();
 extern const Deki::ComponentMeta* DekiInput_GetAutoComponentMeta(int index);
 
+namespace DekiInput
+{
+
+#ifdef DEKI_EDITOR
+
+#ifndef DEKI_PLUGIN_EXPORTS
+// Auto-generated registration helpers (standalone DLL only)
+
 // Track if already registered to avoid duplicates
 static bool s_InputRegistered = false;
+
+
+// The exports below are C symbols at global scope; the package's own
+// registration helpers and statics live in its namespace.
+using namespace DekiInput;
 
 extern "C" {
 
@@ -33,16 +42,16 @@ extern "C" {
 DEKI_INPUT_API int DekiInput_EnsureRegistered(void)
 {
     if (s_InputRegistered)
-        return DekiInput_GetAutoComponentCount();
+        return ::DekiInput_GetAutoComponentCount();
     s_InputRegistered = true;
 
-    DekiInput_RegisterComponents();
+    ::DekiInput_RegisterComponents();
 
     // Initialize input system (idempotent — may already be initialized
     // by deki_init_package_systems() during Deki::Engine::Initialize())
     DekiInput_InitSystem();
 
-    return DekiInput_GetAutoComponentCount();
+    return ::DekiInput_GetAutoComponentCount();
 }
 
 } // extern "C"
@@ -57,7 +66,7 @@ extern "C" {
 #ifndef DEKI_PLUGIN_EXPORTS
 DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)
 {
-    return "Deki Input Package";
+    return "DekiRendering::Deki Input Package";
 }
 
 DEKI_PLUGIN_API const char* DekiPlugin_GetVersion(void)
@@ -82,12 +91,12 @@ DEKI_PLUGIN_API void DekiPlugin_Shutdown(void)
 
 DEKI_PLUGIN_API int DekiPlugin_GetComponentCount(void)
 {
-    return DekiInput_GetAutoComponentCount();
+    return ::DekiInput_GetAutoComponentCount();
 }
 
 DEKI_PLUGIN_API const Deki::ComponentMeta* DekiPlugin_GetComponentMeta(int index)
 {
-    return DekiInput_GetAutoComponentMeta(index);
+    return ::DekiInput_GetAutoComponentMeta(index);
 }
 
 DEKI_PLUGIN_API void DekiPlugin_RegisterComponents(void)
@@ -109,3 +118,5 @@ DEKI_INPUT_API const char* DekiInput_GetName(void)
 } // extern "C"
 
 #endif // DEKI_EDITOR
+}  // namespace DekiInput
+

@@ -6,6 +6,11 @@
 
 // Forward declarations
 namespace Deki { class Object; }
+
+namespace DekiRendering { class CameraComponent; }
+
+namespace DekiInput
+{
 struct InputEvent;
 
 /**
@@ -54,9 +59,9 @@ private:
     // Camera used for screen->world, found once per scene rather than by a
     // full tree walk (through a heap-allocated std::function) on every
     // mouse-move event. Reset when the root scene pointer changes.
-    class CameraComponent* m_CachedCamera = nullptr;
+    DekiRendering::CameraComponent* m_CachedCamera = nullptr;
     Deki::Scene* m_CachedCameraScene = nullptr;
-    CameraComponent* FindCamera(Deki::Scene* scene);
+    DekiRendering::CameraComponent* FindCamera(Deki::Scene* scene);
 
     /**
      * @brief Callback from DekiInput — converts screen→world and dispatches
@@ -74,3 +79,5 @@ private:
     bool DispatchToObject(Deki::Object* obj, float x, float y,
                           bool down, bool move, bool up);
 };
+
+}  // namespace DekiInput
