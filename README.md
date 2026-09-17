@@ -26,7 +26,9 @@ Install via the Package Manager inside the Deki Editor.
 
 ## Dependencies
 
-None.
+| Dependency | Type |
+|---|---|
+| `deki-rendering` | Deki package |
 
 ## License
 
