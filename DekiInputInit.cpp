@@ -3,10 +3,15 @@
 #include <deki/Engine.h>
 #include <deki/LogSystem.h>
 
+// The package's own state stays in its namespace; the two entry points below
+// are at global scope because the editor's generated glue declares them that
+// way. See DekiInputInit.h.
 namespace DekiInput
 {
-
 static DekiInputSystem* s_InputSystem = nullptr;
+}
+
+using namespace DekiInput;
 
 void DekiInput_InitSystem()
 {
@@ -32,5 +37,3 @@ void DekiInput_ShutdownSystem()
 
     DEKI_LOG_INTERNAL("DekiInput: Input system shutdown");
 }
-
-}  // namespace DekiInput

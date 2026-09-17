@@ -10,6 +10,15 @@ alongside one that has them.
 
 ## 0.16.0
 
+### Fixed
+- `DekiInput_InitSystem` and `DekiInput_ShutdownSystem` stay at global scope.
+  The namespace move swept up these two, but they are link-time glue: the
+  editor generates a translation unit declaring them as plain externs to bring
+  a static simulator or firmware build up, and that generated file cannot know
+  a package's namespace. Which is why the symbol carries the package prefix
+  itself, as `DekiInput_RegisterComponents` from the reflection codegen always
+  has. Namespaced, they broke every simulator and firmware link.
+
 ### Changed
 - **Moved into the `DekiInput` namespace.** Every component was declared at global
   scope, which made its identity a bare class name — the name a scene file
