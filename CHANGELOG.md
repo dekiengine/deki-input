@@ -8,6 +8,42 @@ breaking change bumps the minor across the editor, the engine and every
 package together, so a package with no changes of its own is still released
 alongside one that has them.
 
+## Unreleased
+
+### Added
+- **`Keys.h`: the key ids, in public.** `DekiInput::Keys::Space`, `Enter`,
+  `Up`, `A`..`Z`, `Num0`..`Num9`. They are the values drivers have always
+  reported; the list was private to the engine, so every driver restated it
+  and games wrote bare numbers. `Keys::ForCharacter` gives the key a typed
+  character sits on.
+- **`InputEvent::character`**: what a `KEY_DOWN` types, where `key` is the key.
+  Shift and the A key is `Keys::A` typing `'A'`. 0 when the key types nothing
+  or the driver only knows keys. It is the struct's last field and defaults to
+  0, so existing drivers need no change.
+- **`I2CKeyboardComponent`**: a boot-scene step for a keyboard that hands over
+  one typed character per I2C read - the LilyGO T-Deck's (0x55), the M5Stack
+  CardKB (0x5F). Each character is a `KEY_DOWN` and, on the next update, its
+  `KEY_UP`. The keyboard's controller may still be starting at boot: it is
+  looked for over the first five seconds, then left alone. A missing keyboard
+  never stops the boot. Needs `deki-i2c`.
+- **`TrackballComponent`**: a trackball on four pulse lines and a click, as the
+  arrow keys and Enter (`Keys`) or as a pointer whose click is a mouse button
+  (`Pointer`). Steps are counted by interrupt, so none are lost between
+  frames. Needs `deki-gpio`.
+
+Both are tested against fake devices; neither has run on hardware yet.
+
+### Changed
+- **Features name what they need, and nothing is required of every project.**
+  `requires` is empty. Colliders need `deki-rendering` (the camera, for screen
+  to world), the keyboard `deki-i2c`, the trackball `deki-gpio`, each declared
+  on its feature. Installing this package installs none of them; a feature
+  whose package is missing builds as a step that logs what to install. A
+  desktop project gets this package alone.
+- `InputCollider::GetBounds()` is gone. It returned a `deki-2d` type, which
+  made this package include `deki-2d` without depending on it. Read the
+  collider's size and padding fields instead.
+
 ## 0.16.0
 
 ### Fixed

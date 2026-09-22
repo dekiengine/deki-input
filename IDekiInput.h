@@ -30,9 +30,15 @@ struct InputEvent
 {
     InputEventType type;
     int32_t x, y;  // Position for mouse/touch events
-    uint32_t key;  // Key code for keyboard events
+    uint32_t key;  // Key id for keyboard events: see Keys.h
     bool pressed;  // Button/key state
     uint32_t timestamp;  // Event timestamp
+
+    // What a KEY_DOWN types, as a code point: 'A' for shift and the A key,
+    // where `key` is Keys::A. 0 when the key types nothing (an arrow) or the
+    // driver only knows keys, not text. Last and defaulted so drivers written
+    // before it need no change.
+    uint32_t character = 0;
 };
 
 // Input event callback function type

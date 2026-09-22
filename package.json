@@ -6,17 +6,42 @@
     "transform_2d"
   ],
   "buildDefine": "DEKI_PACKAGE_INPUT",
-  "requires": [
-    "deki-rendering"
-  ],
+  "requires": [],
   "features": [
     {
       "id": "input",
-      "displayName": "Input",
+      "displayName": "Colliders",
       "buildDefine": "DEKI_FEATURE_INPUT",
       "defaultEnabled": true,
       "componentTypes": [
         "InputCollider"
+      ],
+      "requires": [
+        "deki-rendering"
+      ]
+    },
+    {
+      "id": "i2c_keyboard",
+      "displayName": "I2C Keyboard",
+      "buildDefine": "DEKI_FEATURE_INPUT_I2C_KEYBOARD",
+      "defaultEnabled": true,
+      "componentTypes": [
+        "I2CKeyboardComponent"
+      ],
+      "requires": [
+        "deki-i2c"
+      ]
+    },
+    {
+      "id": "trackball",
+      "displayName": "Trackball",
+      "buildDefine": "DEKI_FEATURE_INPUT_TRACKBALL",
+      "defaultEnabled": true,
+      "componentTypes": [
+        "TrackballComponent"
+      ],
+      "requires": [
+        "deki-gpio"
       ]
     }
   ],

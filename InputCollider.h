@@ -6,7 +6,6 @@
 
 #include <deki/Component.h>
 #include <deki/reflection/Property.h>
-#include "deki-2d/Bounds2D.h"
 
 namespace Deki { class Object; }
 
@@ -128,22 +127,6 @@ public:
      * a drag gesture to cancel child interactions.
      */
     void CancelInput();
-
-    /**
-     * @brief Get the Deki2D::Bounds2D for this collider (for editor visualization)
-     *
-     * Deki2D::Bounds2D stores world meters; editor gizmo paths multiply by the camera
-     * ppm to get screen pixels. For sub-pixel collider math use HitTest().
-     */
-    Deki2D::Bounds2D GetBounds() const
-    {
-        Deki2D::Bounds2D b(width, height);
-        b.paddingLeft = paddingLeft;
-        b.paddingRight = paddingRight;
-        b.paddingTop = paddingTop;
-        b.paddingBottom = paddingBottom;
-        return b;
-    }
 
     // --- State queries ---
     bool IsPointerInside() const { return m_PointerInside; }

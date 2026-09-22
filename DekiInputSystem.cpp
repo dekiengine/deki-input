@@ -3,7 +3,12 @@
 #include <deki/Engine.h>
 #include <deki/Object.h>
 #include <deki/Scene.h>
+// Screen to world goes through the scene's camera, which deki-rendering
+// provides. Optional: without it, pointer positions are used as they come.
+#if __has_include("deki-rendering/CameraComponent.h")
+#define DEKI_INPUT_HAS_CAMERA 1
 #include "deki-rendering/CameraComponent.h"
+#endif
 #include "DekiInput.h"  // now local to this package
 #include <deki/providers/IRenderSystem.h>
 
@@ -141,12 +146,12 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
     if (!isDown && !isMove && !isUp)
         return;
 
-    // Camera for screen-to-world conversion, cached per scene.
-    DekiRendering::CameraComponent* cam = FindCamera(scene);
-
     float worldX = static_cast<float>(event.x);
     float worldY = static_cast<float>(event.y);
 
+#if DEKI_INPUT_HAS_CAMERA
+    // Camera for screen-to-world conversion, cached per scene.
+    DekiRendering::CameraComponent* cam = FindCamera(scene);
     if (cam && engine.GetRenderSystem())
     {
         cam->ScreenToWorld(static_cast<float>(event.x), static_cast<float>(event.y),
@@ -154,10 +159,12 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
                            engine.GetRenderSystem()->GetScreenHeight(),
                            worldX, worldY);
     }
+#endif
 
     DispatchInput(scene, worldX, worldY, isDown, isMove, isUp);
 }
 
+#if DEKI_INPUT_HAS_CAMERA
 static DekiRendering::CameraComponent* FindCameraRecursive(Deki::Object* obj)
 {
     if (DekiRendering::CameraComponent* c = obj->GetComponent<DekiRendering::CameraComponent>())
@@ -185,6 +192,7 @@ DekiRendering::CameraComponent* DekiInputSystem::FindCamera(Deki::Scene* scene)
     }
     return m_CachedCamera;
 }
+#endif
 
 void DekiInputSystem::DispatchInput(Deki::Scene* scene, float x, float y,
                                      bool down, bool move, bool up)
@@ -216,7 +224,9 @@ bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y,
             childConsumed = true;
     }
 
-    // Phase 2: Process this object's InputCollider
+    // Phase 2: Process this object's InputCollider. Left out with the
+    // colliders feature, whose sources a stripped build does not compile.
+#if !defined(DEKI_PACKAGE_FEATURES_CONFIGURED) || defined(DEKI_FEATURE_INPUT)
     for (Deki::Component* comp : obj->GetComponents())
     {
         if (comp->GetType() == ::Deki::TypeId<InputCollider>() ||
@@ -233,6 +243,7 @@ bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y,
             break;
         }
     }
+#endif
 
     return childConsumed;
 }

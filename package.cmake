@@ -11,6 +11,11 @@ set(PACKAGE_SOURCES
     DekiInputSystem.cpp
     DekiInputInit.cpp
     DekiInput.cpp
+    I2CKeyboard.cpp
+    I2CKeyboardComponent.cpp
+    Trackball.cpp
+    TrackballComponent.cpp
 )
 set(PACKAGE_ENTRY DekiInputPackage.cpp)
-set(PACKAGE_LINK_DEPS deki-rendering)
+# Each links only when installed: see the features' "requires".
+set(PACKAGE_LINK_DEPS deki-rendering deki-i2c deki-gpio)
