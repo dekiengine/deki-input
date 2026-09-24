@@ -62,8 +62,13 @@ void TrackballComponent::Setup(SetupCallback onComplete)
 
     ball->SetMode(mode == TrackballMode::Pointer ? Trackball::Mode::Pointer : Trackball::Mode::Keys);
     ball->SetPixelsPerStep(pixelsPerStep);
-    auto& engine = Deki::Engine::GetInstance();
-    ball->SetPointerArea(engine.GetScreenWidth(), engine.GetScreenHeight());
+    // The screen: the framebuffer, sized once the display is set up.
+    ball->SetPointerAreaSource([](int32_t& w, int32_t& h)
+    {
+        auto& engine = Deki::Engine::GetInstance();
+        w = engine.GetScreenWidth();
+        h = engine.GetScreenHeight();
+    });
 
     if (ball->Initialize())
     {

@@ -189,3 +189,33 @@ TEST(TrackballPointer, TheClickIsAMouseButtonAtThePointer)
     ASSERT_EQ(e.size(), 1u);
     EXPECT_EQ(e[0].type, InputEventType::MOUSE_BUTTON_UP);
 }
+
+TEST(TrackballPointer, FollowsTheScreenOnceItHasASize)
+{
+    Bench b;
+    b.ball.SetMode(Trackball::Mode::Pointer);
+    b.ball.SetPixelsPerStep(4);
+    int32_t screenW = 0, screenH = 0;  // no display yet
+    b.ball.SetPointerAreaSource([&](int32_t& w, int32_t& h) { w = screenW; h = screenH; });
+    b.ball.Initialize();
+
+    b.next.right = 1;
+    b.Frame();
+    EXPECT_TRUE(b.Take().empty()) << "no screen, nowhere to move";
+
+    screenW = 640;  // the display arrives: centred on it
+    screenH = 480;
+    b.next.right = 1;
+    b.Frame();
+    auto e = b.Take();
+    ASSERT_EQ(e.size(), 1u);
+    EXPECT_EQ(e[0].x, 324);
+    EXPECT_EQ(e[0].y, 240);
+
+    b.next.right = 1000;  // and clamps to it
+    b.ball.SetPixelsPerStep(1);
+    b.Frame();
+    e = b.Take();
+    ASSERT_EQ(e.size(), 1u);
+    EXPECT_EQ(e[0].x, 639);
+}

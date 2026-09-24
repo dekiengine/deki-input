@@ -48,6 +48,12 @@ public:
     void SetMode(Mode mode) { m_Mode = mode; }
     /// Pointer mode: the area the pointer moves in, and how far one step is.
     void SetPointerArea(int32_t width, int32_t height);
+    /// Pointer mode: where to read the area from, asked on every update. The
+    /// screen's size is only known once a display is set, which is after this
+    /// is set up; until it reports a size the pointer does not move, and the
+    /// first size it reports centres it.
+    using AreaSource = std::function<void(int32_t& width, int32_t& height)>;
+    void SetPointerAreaSource(AreaSource source) { m_AreaSource = std::move(source); }
     void SetPixelsPerStep(int32_t pixels) { m_PixelsPerStep = pixels > 0 ? pixels : 1; }
 
     bool Initialize() override;
@@ -65,6 +71,8 @@ private:
 
     Read m_Read;
     Clock m_Clock;
+    AreaSource m_AreaSource;
+    bool m_AreaKnown = false;  // with a source: whether it has reported a size yet
     std::vector<InputEventCallback> m_Callbacks;
 
     bool m_Initialized = false;

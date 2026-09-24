@@ -114,6 +114,24 @@ void Trackball::UpdateKeys(const Sample& s)
 
 void Trackball::UpdatePointer(const Sample& s)
 {
+    if (m_AreaSource)
+    {
+        int32_t w = 0, h = 0;
+        m_AreaSource(w, h);
+        if (w <= 0 || h <= 0)
+            return;  // no screen yet: nowhere to move
+        if (!m_AreaKnown || w != m_Width || h != m_Height)
+        {
+            SetPointerArea(w, h);
+            if (!m_AreaKnown)
+            {
+                m_X = m_Width / 2;
+                m_Y = m_Height / 2;
+                m_AreaKnown = true;
+            }
+        }
+    }
+
     const int32_t dx = (static_cast<int32_t>(s.right) - static_cast<int32_t>(s.left)) * m_PixelsPerStep;
     const int32_t dy = (static_cast<int32_t>(s.down) - static_cast<int32_t>(s.up)) * m_PixelsPerStep;
     if (dx != 0 || dy != 0)

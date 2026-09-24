@@ -10,6 +10,10 @@ alongside one that has them.
 
 ## Unreleased
 
+### Fixed
+- The trackball pointer reads the screen size while it runs. It used to take it
+  at setup, before a display existed.
+
 ### Added
 - **`Keys.h`: the key ids, in public.** `DekiInput::Keys::Space`, `Enter`,
   `Up`, `A`..`Z`, `Num0`..`Num9`. They are the values drivers have always
