@@ -10,10 +10,6 @@ alongside one that has them.
 
 ## Unreleased
 
-### Fixed
-- The trackball pointer reads the screen size while it runs. It used to take it
-  at setup, before a display existed.
-
 ### Added
 - **`Keys.h`: the key ids, in public.** `DekiInput::Keys::Space`, `Enter`,
   `Up`, `A`..`Z`, `Num0`..`Num9`. They are the values drivers have always
@@ -47,6 +43,10 @@ Both are tested against fake devices; neither has run on hardware yet.
 - `InputCollider::GetBounds()` is gone. It returned a `deki-2d` type, which
   made this package include `deki-2d` without depending on it. Read the
   collider's size and padding fields instead.
+
+### Fixed
+- The trackball pointer reads the screen size while it runs. It used to take it
+  at setup, before a display existed.
 
 ## 0.16.0
 
