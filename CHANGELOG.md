@@ -8,7 +8,7 @@ breaking change bumps the minor across the editor, the engine and every
 package together, so a package with no changes of its own is still released
 alongside one that has them.
 
-## Unreleased
+## 0.17.0
 
 ### Added
 - **`Keys.h`: the key ids, in public.** `DekiInput::Keys::Space`, `Enter`,
@@ -34,6 +34,7 @@ alongside one that has them.
 Both are tested against fake devices; neither has run on hardware yet.
 
 ### Changed
+- `minEngine` 0.17.0. Reflection ABI 20: the package must be rebuilt.
 - **Features name what they need, and nothing is required of every project.**
   `requires` is empty. Colliders need `deki-rendering` (the camera, for screen
   to world), the keyboard `deki-i2c`, the trackball `deki-gpio`, each declared
