@@ -19,21 +19,15 @@ namespace DekiInput
 {
 struct InputEvent;
 
-/**
- * @brief Input dispatch system — routes input events to InputCollider components
- *
- * Concrete implementation of Deki::IInputSystem, lives in the input package DLL.
- * Registered on Deki::Engine via SetInputSystem() during package init.
- *
- * For embedded runtime: registers as a callback on DekiInput and
- * auto-dispatches when input events arrive.
- *
- * For editor play mode: call DispatchInput() directly from PlayViewPanel.
- *
- * Coordinates: DispatchInput takes WORLD UNITS (float). Raw device pixels
- * coming from InputEvent are converted via Camera::ScreenToWorld in
- * OnInputEvent before reaching dispatch.
- */
+/// Sends input events to InputCollider components. The package's
+/// Deki::IInputSystem, set on Deki::Engine with SetInputSystem() when the
+/// package starts.
+///
+/// On a device it registers a callback on DekiInput and dispatches as events
+/// arrive. In editor play mode, PlayViewPanel calls DispatchInput() directly.
+///
+/// DispatchInput takes WORLD UNITS (float). OnInputEvent converts the device
+/// pixels in an InputEvent with Camera::ScreenToWorld before dispatching.
 class DekiInputSystem : public Deki::IInputSystem
 {
 public:
@@ -44,13 +38,10 @@ public:
     void Shutdown() override;
     void DispatchInput(Deki::Scene* scene, float x, float y, bool down, bool move, bool up) override;
 
-    /**
-     * @brief Inject a key state change from the host (editor play view).
-     *
-     * Backed by an "Injected" IDekiInput driver registered on demand, so
-     * DekiInput::IsKeyPressed() aggregates injected keys exactly like keys
-     * from a real driver (SDL3 on the desktop simulator).
-     */
+    /// Injects a key state change from the host (the editor play view).
+    /// Backed by an "Injected" IDekiInput driver registered on demand, so
+    /// DekiInput::IsKeyPressed() counts injected keys exactly like keys from
+    /// a real driver (SDL3 on the desktop simulator).
     void DispatchKey(uint32_t key, bool down) override;
 
     bool IsInitialized() const override { return m_Initialized; }
@@ -61,26 +52,18 @@ public:
 private:
     bool m_Initialized = false;
 
-    // Camera used for screen->world, found once per scene rather than by a
-    // full tree walk (through a heap-allocated std::function) on every
-    // mouse-move event. Reset when the root scene pointer changes.
+    // Camera used for screen->world, found once per scene so a mouse move
+    // does not walk the whole tree. Reset when the root scene pointer changes.
     DekiRendering::CameraComponent* m_CachedCamera = nullptr;
     Deki::Scene* m_CachedCameraScene = nullptr;
     DekiRendering::CameraComponent* FindCamera(Deki::Scene* scene);
 
-    /**
-     * @brief Callback from DekiInput — converts screen→world and dispatches
-     */
+    // Callback from DekiInput: converts screen to world and dispatches.
     void OnInputEvent(const InputEvent& event);
 
-    /**
-     * @brief Recursively dispatch input to an object and its children
-     *
-     * Uses children-first dispatch: deepest child processes first,
-     * giving inner/frontmost elements priority over parents.
-     *
-     * @return true if input was consumed (a collider with consumeInput=true handled it)
-     */
+    // Dispatches input to an object and its children, children first, so the
+    // innermost (frontmost) elements take priority over their parents.
+    // Returns true when a collider with consumeInput=true handled it.
     bool DispatchToObject(Deki::Object* obj, float x, float y, bool down, bool move, bool up);
 };
 

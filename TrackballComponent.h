@@ -14,19 +14,17 @@ enum class TrackballMode : uint8_t
     Pointer = 1  // a mouse
 };
 
-/**
- * @brief Boot-scene component for a trackball on GPIO pins
- *
- * Four lines that pulse once per step, one per direction, and a switch for
- * the click. The LilyGO T-Deck's ball is one. Steps are counted by interrupt
- * through deki-gpio, so none are lost between frames.
- *
- * In Keys mode the ball is the arrow keys and the click is Enter; in Pointer
- * mode it moves a pointer across the screen and the click is a mouse button,
- * so a scene built for touch works unchanged.
- *
- * A platform with no GPIO backend (the desktop) logs and boots on.
- */
+/// Boot-scene component for a trackball on GPIO pins.
+///
+/// Four lines that pulse once per step, one per direction, and a switch for
+/// the click. The LilyGO T-Deck's ball is one. Steps are counted by interrupt
+/// through deki-gpio, so none are lost between frames.
+///
+/// In Keys mode the ball is the arrow keys and the click is Enter; in Pointer
+/// mode it moves a pointer across the screen and the click is a mouse button,
+/// so a scene built for touch works unchanged.
+///
+/// A platform with no GPIO backend (the desktop) logs and boots on.
 DEKI_CATEGORY("Input")
 DEKI_DISPLAY_NAME("Trackball")
 DEKI_DESCRIPTION("A trackball on GPIO pins, as arrow keys and Enter or as a pointer.")
@@ -76,7 +74,5 @@ public:
     void Setup(SetupCallback onComplete) override;
     const char* GetSetupName() const override { return "Trackball"; }
 };
-
-// Generated property metadata
 
 }  // namespace DekiInput

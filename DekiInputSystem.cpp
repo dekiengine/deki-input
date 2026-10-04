@@ -9,7 +9,7 @@
 #define DEKI_INPUT_HAS_CAMERA 1
 #include "deki-rendering/CameraComponent.h"
 #endif
-#include "DekiInput.h"  // now local to this package
+#include "DekiInput.h"  // this package's own
 #include <deki/providers/IRenderSystem.h>
 
 #include <map>
@@ -226,8 +226,8 @@ void DekiInputSystem::DispatchInput(Deki::Scene* scene, float x, float y, bool d
 bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y, bool down, bool move, bool up)
 {
     // An inactive object is invisible (the renderer skips it), so it must not
-    // take input either: a hidden menu's buttons kept firing onClick. Parents
-    // are checked on the way down, so IsActive() alone is the full test here.
+    // take input either, or a hidden menu's buttons fire onClick. Parents are
+    // checked on the way down, so IsActive() alone is the full test here.
     if (!obj || !obj->IsActive())
     {
         return false;

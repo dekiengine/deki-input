@@ -7,9 +7,9 @@
 //     if (DekiInput::DekiInput::IsKeyPressed(DekiInput::Keys::Space)) ...
 //
 // A key that types a printable character is that character's ASCII code, in
-// lower case for letters; the rest have ids of their own. These are the values
-// the engine has always used (its own list is private to it), which every
-// driver used to restate and every game used to write as bare numbers.
+// lower case for letters; the rest have ids of their own. The values match
+// the engine's own private list, so drivers and games name them here instead
+// of writing bare numbers.
 //
 // A key is not a character. Holding shift and pressing the A key is the key
 // Keys::A typing 'A': InputEvent::key carries the first, InputEvent::character

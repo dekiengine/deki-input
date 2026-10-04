@@ -7,9 +7,6 @@
 namespace DekiInput
 {
 
-/**
- * @brief Input event types
- */
 enum class InputEventType
 {
     MouseMove,
@@ -23,9 +20,6 @@ enum class InputEventType
     AppQuit  // Application quit request
 };
 
-/**
- * @brief Input event data structure
- */
 struct InputEvent
 {
     InputEventType type;
@@ -44,59 +38,31 @@ struct InputEvent
 // Input event callback function type
 using InputEventCallback = std::function<void(const InputEvent& event)>;
 
-/**
- * @brief Abstract interface for input package operations
- *
- * This interface defines the contract that input packages must implement
- * to work with the Deki engine. It abstracts input initialization,
- * event handling, and input device management.
- */
+/// What an input driver implements to work with the Deki engine: start-up,
+/// events, and the state of the pointer and keys.
 class IDekiInput
 {
 public:
     virtual ~IDekiInput() = default;
 
-    /**
-     * @brief Initialize the platform input system
-     * @return true if initialization successful, false otherwise
-     */
+    /// Starts the driver. Returns false when it cannot.
     virtual bool Initialize() = 0;
 
-    /**
-     * @brief Shutdown the input system and cleanup resources
-     */
+    /// Stops the driver and frees its resources.
     virtual void Shutdown() = 0;
 
-    /**
-     * @brief Update input system and process events (called each frame)
-     */
+    /// Reads the device and sends its events; called once a frame.
     virtual void Update() = 0;
 
-    /**
-     * @brief Register a callback for input events
-     * @param callback Function to call when input events occur
-     */
+    /// Adds a callback that receives this driver's events.
     virtual void RegisterEventCallback(const InputEventCallback& callback) = 0;
 
-    /**
-     * @brief Check if the input system is initialized
-     * @return true if initialized, false otherwise
-     */
     virtual bool IsInitialized() const = 0;
 
-    /**
-     * @brief Get current mouse/touch position
-     * @param x Pointer to store X coordinate
-     * @param y Pointer to store Y coordinate
-     * @return true if position is valid, false otherwise
-     */
+    /// The current mouse or touch position. Returns false when there is none.
     virtual bool GetPointerPosition(int32_t* x, int32_t* y) const = 0;
 
-    /**
-     * @brief Check if a key is currently pressed
-     * @param key Key code to check
-     * @return true if key is pressed, false otherwise
-     */
+    /// True when `key` (see Keys.h) is down.
     virtual bool IsKeyPressed(uint32_t key) const = 0;
 };
 

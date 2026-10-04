@@ -1,10 +1,9 @@
 #pragma once
 
-// DLL export macro, in its own header so intra-package headers can use it
-// without pulling the DekiInputPackage.h aggregator, and so the macro has one
-// definition: InputDispatch.h and the aggregator each used to spell it out,
-// and the two spellings disagreed about DEKI_ENGINE_EXPORTS, so the linkage a
-// symbol got depended on which header was included first.
+// DLL export macro, in its own header so the package's headers can use it
+// without the DekiInputPackage.h aggregator. Define it here only: two
+// definitions that disagree give a symbol a linkage that depends on which
+// header was included first.
 #ifdef DEKI_EDITOR
 #ifdef _WIN32
 #if defined(DEKI_INPUT_EXPORTS) || defined(DEKI_ENGINE_EXPORTS) || defined(DEKI_PLUGIN_EXPORTS)

@@ -7,17 +7,12 @@
 namespace DekiInput
 {
 
-/**
- * @brief Gesture claim system for input dispatch
- *
- * Components call ClaimGesture() to take ownership of the current
- * pointer gesture. Other components check IsGestureClaimed() before
- * acting on input, and back off if another component owns the gesture.
- *
- * Example: ScrollComponent claims the gesture when drag threshold is
- * exceeded, preventing nested scrolls and child components from
- * processing further input.
- */
+/// Lets one component own the current pointer gesture. A component calls
+/// ClaimGesture() to take it; others check IsGestureClaimed() before acting
+/// on input and back off when someone else owns it.
+///
+/// Example: ScrollComponent claims the gesture once a drag passes its
+/// threshold, so nested scrolls and child components stop handling it.
 class DEKI_INPUT_API InputDispatch
 {
 public:

@@ -8,21 +8,19 @@
 namespace DekiInput
 {
 
-/**
- * @brief Boot-scene component for a keyboard on the I2C bus
- *
- * For a keyboard that answers a read with the next character typed: the
- * LilyGO T-Deck's (address 0x55) and the M5Stack CardKB (0x5F). Needs an
- * I2CBusComponent on the matching port earlier in the boot scene.
- *
- * Keys arrive as KeyDown / KeyUp through DekiInput like any other
- * keyboard's: InputEvent::key is the key (Keys.h), InputEvent::character what
- * it typed.
- *
- * A keyboard that is not there does not stop the boot. Its controller may
- * still be starting when this runs, so it is looked for over the first few
- * seconds, and after that the step says nothing answered and stays quiet.
- */
+/// Boot-scene component for a keyboard on the I2C bus.
+///
+/// For a keyboard that answers a read with the next character typed: the
+/// LilyGO T-Deck's (address 0x55) and the M5Stack CardKB (0x5F). Needs an
+/// I2CBusComponent on the matching port earlier in the boot scene.
+///
+/// Keys arrive as KeyDown / KeyUp through DekiInput like any other
+/// keyboard's: InputEvent::key is the key (Keys.h), InputEvent::character what
+/// it typed.
+///
+/// A missing keyboard does not stop the boot. Its controller may still be
+/// starting when this runs, so it is looked for over the first few seconds;
+/// after that the step reports that nothing answered and stays quiet.
 DEKI_CATEGORY("Input")
 DEKI_DISPLAY_NAME("I2C Keyboard")
 DEKI_DESCRIPTION(
@@ -44,7 +42,5 @@ public:
     void Setup(SetupCallback onComplete) override;
     const char* GetSetupName() const override { return "I2C Keyboard"; }
 };
-
-// Generated property metadata
 
 }  // namespace DekiInput

@@ -10,16 +10,12 @@
 namespace DekiInput
 {
 
-/**
- * @brief Input Provider for handling multiple input implementations
- *
- * Centralized registry for input sources (mouse / keyboard / touch / gamepad
- * / etc.). Multiple input packages can be active simultaneously; events from
- * every active source are aggregated into the global event stream.
- *
- * Concrete drivers live in platform integration packages and register via
- * SetInput(); this package owns only the interface and the dispatch logic.
- */
+/// The registry of input sources (mouse, keyboard, touch, gamepad and so on).
+/// Several can be active at once; events from every active source go into
+/// one global event stream.
+///
+/// Drivers live in platform integration packages and register with
+/// SetInput(); this package owns the interface and the dispatch logic.
 class DekiInput
 {
 private:
@@ -29,89 +25,49 @@ private:
     static bool s_ShouldExit;
 
 public:
-    /**
-     * @brief Set a pre-initialized input package directly
-     * @param input The input package to use (takes ownership)
-     * @param name Input package name for identification
-     * @return true if set successfully
-     */
+    /// Adds an initialized input source under `name` and takes ownership of
+    /// it. A name already registered is left as it is. Returns false only for
+    /// a null input.
     static bool SetInput(std::unique_ptr<IDekiInput> input, const std::string& name);
 
-    /**
-     * @brief Shutdown all input packages
-     */
+    /// Shuts down and removes every input source and callback.
     static void Shutdown();
 
-    /**
-     * @brief Get specific input by name
-     * @param name Input package name
-     * @return Pointer to input package, or nullptr if not found
-     */
+    /// The input source registered under `name`, or nullptr.
     static IDekiInput* GetInput(const std::string& name);
 
-    /**
-     * @brief Register global event callback (receives events from ALL inputs)
-     * @param callback Function to call when input events occur
-     */
+    /// Adds a callback that receives events from ALL input sources.
     static void RegisterEventCallback(const InputEventCallback& callback);
 
-    /**
-     * @brief Clear all global event callbacks
-     *
-     * Must be called before freeing DLLs that registered callbacks,
-     * otherwise the std::function internals point to freed code.
-     */
+    /// Removes every global event callback. Call it before freeing a DLL that
+    /// registered callbacks, or the std::function objects point into freed
+    /// code.
     static void ClearEventCallbacks();
 
-    /**
-     * @brief Update all active inputs (called each frame)
-     * This processes events from all registered input sources
-     */
+    /// Updates every active input source, once a frame, which delivers their
+    /// events.
     static void Update();
 
-    /**
-     * @brief Get current pointer/mouse position from first available input
-     * @param x Pointer to store X coordinate
-     * @param y Pointer to store Y coordinate
-     * @return true if position is valid
-     */
+    /// The pointer position from the first input source that has one. Returns
+    /// false when none does.
     static bool GetPointerPosition(int32_t* x, int32_t* y);
 
-    /**
-     * @brief Check if a key is currently pressed across all inputs
-     * @param key Key code to check
-     * @return true if key is pressed in any active input
-     */
+    /// True when `key` (see Keys.h) is down on any active input source.
     static bool IsKeyPressed(uint32_t key);
 
-    /**
-     * @brief Check if the application should exit
-     * @return true if quit event was received from any input
-     */
+    /// True once any input source has sent a quit event.
     static bool ShouldExit();
 
-    /**
-     * @brief Set the exit flag (called by input packages on quit events)
-     * @param exit Should exit flag
-     */
+    /// Sets the exit flag. Input packages call it on a quit event.
     static void SetShouldExit(bool exit);
 
-    /**
-     * @brief Check if the input backend is initialized
-     * @return true if initialized, false otherwise
-     */
     static bool IsInitialized() { return s_Initialized; }
 
-    /**
-     * @brief Get list of all active input package names
-     * @return Vector of active input names
-     */
+    /// The names of all active input sources.
     static std::vector<std::string> GetActiveInputs();
 
 private:
-    /**
-     * @brief Internal callback for distributing events to global callbacks
-     */
+    // Passes an event from any source to the global callbacks.
     static void DistributeEvent(const InputEvent& event);
 };
 

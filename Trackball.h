@@ -10,23 +10,20 @@
 namespace DekiInput
 {
 
-/**
- * @brief A trackball: four pulse lines and a click
- *
- * The LilyGO T-Deck's ball pulses one line per step in each direction and
- * closes a switch when pressed. What a game makes of that is a choice, so
- * the driver has two:
- *
- *   Keys     steps are the arrow keys and the click is Enter. A frame with
- *            steps in a direction is one press of that arrow, released the
- *            next frame, so rolling repeats. A menu or a grid game.
- *   Pointer  the ball moves a pointer across the screen, `pixelsPerStep` per
- *            step, and the click is a mouse button. Anything that already
- *            works with touch.
- *
- * Reading the lines is handed in, so the behaviour is testable without pins.
- * TrackballComponent supplies the GPIO one.
- */
+/// A trackball: four pulse lines and a click.
+///
+/// The LilyGO T-Deck's ball pulses one line per step in each direction and
+/// closes a switch when pressed. The driver turns that into one of two things:
+///
+///   Keys     steps are the arrow keys and the click is Enter. A frame with
+///            steps in a direction is one press of that arrow, released the
+///            next frame, so rolling repeats. For a menu or a grid game.
+///   Pointer  the ball moves a pointer across the screen, `pixelsPerStep` per
+///            step, and the click is a mouse button. For anything that
+///            already works with touch.
+///
+/// Reading the lines is passed in, so the behaviour is testable without pins.
+/// TrackballComponent supplies the GPIO one.
 class DEKI_INPUT_API Trackball : public IDekiInput
 {
 public:

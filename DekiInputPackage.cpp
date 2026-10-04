@@ -1,10 +1,6 @@
-/**
- * @file DekiInputPackage.cpp
- * @brief Package entry point for deki-input DLL
- *
- * Exports the standard Deki plugin interface so the editor
- * can load deki-input.dll and register its components (InputCollider).
- */
+// Package entry point for the deki-input DLL. Exports the standard Deki
+// plugin interface, so the editor can load deki-input.dll and register its
+// components (InputCollider).
 
 #include "DekiInputPackage.h"
 #include <deki/interop/Plugin.h>
@@ -35,9 +31,8 @@ using namespace DekiInput;
 
 extern "C"
 {
-    /**
-     * @brief Ensure deki-input package is loaded and components are registered
-     */
+    // Makes sure the deki-input package is loaded and its components are
+    // registered.
     DEKI_INPUT_API int DekiInputEnsureRegistered(void)
     {
         if (s_InputRegistered)
@@ -48,8 +43,8 @@ extern "C"
 
         ::DekiInputRegisterComponents();
 
-        // Initialize input system (idempotent — may already be initialized
-        // by DekiInitPackageSystems() during Deki::Engine::Initialize())
+        // Safe to repeat: DekiInitPackageSystems() may already have started
+        // it during Deki::Engine::Initialize().
         DekiInputInitSystem();
 
         return ::DekiInputGetAutoComponentCount();

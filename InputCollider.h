@@ -15,32 +15,25 @@ class Object;
 namespace DekiInput
 {
 
-/**
- * @brief Hit area component for pointer/touch input
- *
- * Like Unity's Collider2D — defines a clickable/hoverable area and fires
- * callbacks when pointer events occur. Other components (Deki2D::ButtonComponent,
- * ScrollComponent, etc.) register callbacks to react to input.
- *
- * Coordinates are in WORLD UNITS (float). The dispatch system converts raw
- * device pixels → world units once at the input boundary, so colliders work
- * correctly under any camera PPM/zoom.
- *
- * Subclass and override HitTest() for custom shapes (circle, polygon, etc.).
- *
- * Usage:
- * @code
- * // Add InputCollider to make an object interactive
- * auto* collider = obj->AddComponent<InputCollider>();
- * collider->width = 100.0f;
- * collider->height = 40.0f;
- *
- * // Register callbacks
- * collider->onPointerDown.push_back([](float x, float y) {
- *     // Handle press (x/y in world units)
- * });
- * @endcode
- */
+/// Hit area for pointer and touch input. Like Unity's Collider2D, it defines
+/// an area that can be clicked or hovered and fires callbacks on pointer
+/// events. Other components (Deki2D::ButtonComponent, ScrollComponent and so
+/// on) register callbacks to react to input.
+///
+/// Coordinates are in WORLD UNITS (float). The dispatch system converts device
+/// pixels to world units once, at the input boundary, so colliders work under
+/// any camera PPM or zoom.
+///
+/// Subclass and override HitTest() for other shapes (circle, polygon).
+///
+/// Usage:
+///
+///     auto* collider = obj->AddComponent<InputCollider>();
+///     collider->width = 100.0f;
+///     collider->height = 40.0f;
+///     collider->onPointerDown.push_back([](float x, float y) {
+///         // Handle the press (x/y in world units)
+///     });
 DEKI_CATEGORY("Input")
 DEKI_DESCRIPTION("Hit area for pointer and touch. Buttons and scrolls listen to it.")
 DEKI_FORMER_NAME("InputCollider")
@@ -101,35 +94,19 @@ public:
 
     InputCollider();
 
-    /**
-     * @brief Hit test a world-space point against this collider
-     *
-     * Override in subclasses for custom shapes (circle, polygon, etc.).
-     * Default implementation: axis-aligned box with padding.
-     *
-     * @param x World X coordinate (units)
-     * @param y World Y coordinate (units)
-     * @return true if the point is inside the collider
-     */
+    /// True when the world-space point (x, y) is inside the collider. The
+    /// default is an axis-aligned box with padding; override it for other
+    /// shapes.
     virtual bool HitTest(float x, float y) const;
 
-    /**
-     * @brief Process an input event
-     *
-     * Called by DekiInputSystem. Performs hit test, tracks pointer state,
-     * and fires appropriate callbacks. x/y are in world units.
-     *
-     * @return true if the event was handled (hit test passed and callbacks fired)
-     */
+    /// Called by DekiInputSystem with a point in world units: hit-tests it,
+    /// tracks pointer state and fires the callbacks. Returns true when the
+    /// event was handled (the hit test passed and callbacks fired).
     bool ProcessInput(float x, float y, bool down, bool move, bool up);
 
-    /**
-     * @brief Cancel any active input state
-     *
-     * Resets pressed/hover state and fires onPointerUp/onPointerExit
-     * so components can clean up. Used by ScrollComponent when confirming
-     * a drag gesture to cancel child interactions.
-     */
+    /// Resets pressed and hover state and fires onPointerUp/onPointerExit so
+    /// components can clean up. ScrollComponent calls it when it takes a drag
+    /// gesture, to cancel its children's interactions.
     void CancelInput();
 
     // --- State queries ---
@@ -142,7 +119,5 @@ private:
 
     void InvokeCallbacks(const std::vector<PointerCallback>& callbacks, float x, float y);
 };
-
-// Generated property metadata (after class definition for offsetof)
 
 }  // namespace DekiInput

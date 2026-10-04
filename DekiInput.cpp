@@ -18,7 +18,6 @@ bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& n
         return false;
     }
 
-    // Check if already registered
     if (s_ActiveInputs.find(name) != s_ActiveInputs.end())
     {
         DEKI_LOG_INTERNAL("Input package '%s' already registered", name.c_str());
@@ -28,7 +27,6 @@ bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& n
     // Register internal callback to distribute events
     input->RegisterEventCallback([](const InputEvent& event) { DistributeEvent(event); });
 
-    // Store the input
     s_ActiveInputs[name] = std::move(input);
     s_Initialized = true;
 
@@ -43,7 +41,6 @@ void DekiInput::Shutdown()
         return;
     }
 
-    // Shutdown all active inputs
     for (auto& [name, input] : s_ActiveInputs)
     {
         if (input)
@@ -87,7 +84,6 @@ void DekiInput::Update()
         return;
     }
 
-    // Update all active input packages
     for (auto& [name, input] : s_ActiveInputs)
     {
         if (input && input->IsInitialized())
@@ -163,14 +159,12 @@ std::vector<std::string> DekiInput::GetActiveInputs()
 
 void DekiInput::DistributeEvent(const InputEvent& event)
 {
-    // Handle AppQuit events
     if (event.type == InputEventType::AppQuit)
     {
         s_ShouldExit = true;
         DEKI_LOG_INTERNAL("DekiInput: AppQuit event received");
     }
 
-    // Distribute event to all registered global callbacks
     for (const auto& callback : s_GlobalCallbacks)
     {
         if (callback)

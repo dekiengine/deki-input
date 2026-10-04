@@ -10,22 +10,19 @@
 namespace DekiInput
 {
 
-/**
- * @brief A keyboard that answers a read with the next character typed
- *
- * The LilyGO T-Deck's keyboard and the M5Stack CardKB are both this: a small
- * controller on the I2C bus that does the matrix scanning, the shift and
- * symbol layers and the debouncing itself, and hands over one finished
- * character per read, or 0 when nothing was typed.
- *
- * Such a device reports presses and never releases, so each character becomes
- * a KeyDown and, on the next update, the matching KeyUp. IsKeyPressed is
- * true in between: long enough for a game that polls once a frame to see it.
- *
- * How a byte is read is handed in rather than known here, so the behaviour
- * can be tested without a bus. I2CKeyboardComponent supplies the I2C one.
- *
- */
+/// A keyboard that answers a read with the next character typed.
+///
+/// The LilyGO T-Deck's keyboard and the M5Stack CardKB are both this: a small
+/// controller on the I2C bus that does the matrix scanning, the shift and
+/// symbol layers and the debouncing itself, and hands over one finished
+/// character per read, or 0 when nothing was typed.
+///
+/// Such a device reports presses but no releases, so each character becomes
+/// a KeyDown and, on the next update, the matching KeyUp. IsKeyPressed is
+/// true in between: long enough for a game that polls once a frame to see it.
+///
+/// How a byte is read is passed in, so the behaviour can be tested without a
+/// bus. I2CKeyboardComponent supplies the I2C one.
 class DEKI_INPUT_API I2CKeyboard : public IDekiInput
 {
 public:
