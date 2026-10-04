@@ -12,15 +12,15 @@ namespace DekiInput
  */
 enum class InputEventType
 {
-    MOUSE_MOVE,
-    MOUSE_BUTTON_DOWN,
-    MOUSE_BUTTON_UP,
-    KEY_DOWN,
-    KEY_UP,
-    TOUCH_DOWN,
-    TOUCH_UP,
-    TOUCH_MOVE,
-    APP_QUIT  // Application quit request
+    MouseMove,
+    MouseButtonDown,
+    MouseButtonUp,
+    KeyDown,
+    KeyUp,
+    TouchDown,
+    TouchUp,
+    TouchMove,
+    AppQuit  // Application quit request
 };
 
 /**
@@ -34,7 +34,7 @@ struct InputEvent
     bool pressed;        // Button/key state
     uint32_t timestamp;  // Event timestamp
 
-    // What a KEY_DOWN types, as a code point: 'A' for shift and the A key,
+    // What a KeyDown types, as a code point: 'A' for shift and the A key,
     // where `key` is Keys::A. 0 when the key types nothing (an arrow) or the
     // driver only knows keys, not text. Last and defaulted so drivers written
     // before it need no change.

@@ -25,7 +25,7 @@ class DekiInput
 private:
     static std::map<std::string, std::unique_ptr<IDekiInput>> s_ActiveInputs;
     static std::vector<InputEventCallback> s_GlobalCallbacks;
-    static bool initialized;
+    static bool s_Initialized;
     static bool s_ShouldExit;
 
 public:
@@ -100,7 +100,7 @@ public:
      * @brief Check if the input backend is initialized
      * @return true if initialized, false otherwise
      */
-    static bool IsInitialized() { return initialized; }
+    static bool IsInitialized() { return s_Initialized; }
 
     /**
      * @brief Get list of all active input package names

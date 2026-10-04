@@ -84,7 +84,7 @@ TEST(I2CKeyboard, ACharacterIsAPressThenARelease)
     b.typed.push_back('a');
     b.Frame();
     ASSERT_EQ(b.events.size(), 1u);
-    EXPECT_EQ(b.events[0].type, InputEventType::KEY_DOWN);
+    EXPECT_EQ(b.events[0].type, InputEventType::KeyDown);
     EXPECT_EQ(b.events[0].key, Keys::A);
     EXPECT_EQ(b.events[0].character, uint32_t('a'));
     EXPECT_TRUE(b.events[0].pressed);
@@ -93,7 +93,7 @@ TEST(I2CKeyboard, ACharacterIsAPressThenARelease)
     // The device never says the key came up, so the next update does.
     b.Frame();
     ASSERT_EQ(b.events.size(), 2u);
-    EXPECT_EQ(b.events[1].type, InputEventType::KEY_UP);
+    EXPECT_EQ(b.events[1].type, InputEventType::KeyUp);
     EXPECT_EQ(b.events[1].key, Keys::A);
     EXPECT_FALSE(b.events[1].pressed);
     EXPECT_FALSE(b.keyboard.IsKeyPressed(Keys::A));
@@ -143,10 +143,10 @@ TEST(I2CKeyboard, TheSameKeyTwiceIsTwoPresses)
     b.Frame();
 
     ASSERT_EQ(b.events.size(), 4u);
-    EXPECT_EQ(b.events[0].type, InputEventType::KEY_DOWN);
-    EXPECT_EQ(b.events[1].type, InputEventType::KEY_UP);
-    EXPECT_EQ(b.events[2].type, InputEventType::KEY_DOWN);
-    EXPECT_EQ(b.events[3].type, InputEventType::KEY_UP);
+    EXPECT_EQ(b.events[0].type, InputEventType::KeyDown);
+    EXPECT_EQ(b.events[1].type, InputEventType::KeyUp);
+    EXPECT_EQ(b.events[2].type, InputEventType::KeyDown);
+    EXPECT_EQ(b.events[3].type, InputEventType::KeyUp);
 }
 
 TEST(I2CKeyboard, AKeyboardStillStartingIsFoundLater)

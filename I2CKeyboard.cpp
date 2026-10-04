@@ -58,7 +58,7 @@ void I2CKeyboard::Emit(InputEventType type, uint32_t key, uint32_t character)
     event.type = type;
     event.key = key;
     event.character = character;
-    event.pressed = (type == InputEventType::KEY_DOWN);
+    event.pressed = (type == InputEventType::KeyDown);
     event.timestamp = m_Clock();
     for (const auto& callback : m_Callbacks)
     {
@@ -107,7 +107,7 @@ void I2CKeyboard::Update()
     {
         const uint32_t key = m_DownKey;
         m_DownKey = 0;
-        Emit(InputEventType::KEY_UP, key, 0);
+        Emit(InputEventType::KeyUp, key, 0);
     }
 
     if (m_State == State::GaveUp)
@@ -141,7 +141,7 @@ void I2CKeyboard::Update()
     m_DownKey = Keys::ForCharacter(byte);
     // Control codes (Enter, Backspace, Tab) are keys that type nothing.
     const uint32_t character = (byte >= 32 && byte != 127) ? byte : 0;
-    Emit(InputEventType::KEY_DOWN, m_DownKey, character);
+    Emit(InputEventType::KeyDown, m_DownKey, character);
 }
 
 }  // namespace DekiInput

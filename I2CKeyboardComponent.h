@@ -15,7 +15,7 @@ namespace DekiInput
  * LilyGO T-Deck's (address 0x55) and the M5Stack CardKB (0x5F). Needs an
  * I2CBusComponent on the matching port earlier in the boot scene.
  *
- * Keys arrive as KEY_DOWN / KEY_UP through DekiInput like any other
+ * Keys arrive as KeyDown / KeyUp through DekiInput like any other
  * keyboard's: InputEvent::key is the key (Keys.h), InputEvent::character what
  * it typed.
  *

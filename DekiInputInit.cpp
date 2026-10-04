@@ -13,7 +13,7 @@ static DekiInputSystem* s_InputSystem = nullptr;
 
 using namespace DekiInput;
 
-void DekiInput_InitSystem()
+void DekiInputInitSystem()
 {
     if (s_InputSystem)
     {
@@ -27,7 +27,7 @@ void DekiInput_InitSystem()
     DEKI_LOG_INTERNAL("DekiInput: Input system initialized");
 }
 
-void DekiInput_ShutdownSystem()
+void DekiInputShutdownSystem()
 {
     if (!s_InputSystem)
     {

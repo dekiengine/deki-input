@@ -14,9 +14,9 @@
 #include <deki/reflection/ComponentRegistry.h>
 #include <deki/reflection/ComponentFactory.h>
 
-extern void DekiInput_RegisterComponents();
-extern int DekiInput_GetAutoComponentCount();
-extern const Deki::ComponentMeta* DekiInput_GetAutoComponentMeta(int index);
+extern void DekiInputRegisterComponents();
+extern int DekiInputGetAutoComponentCount();
+extern const Deki::ComponentMeta* DekiInputGetAutoComponentMeta(int index);
 
 namespace DekiInput
 {
@@ -38,21 +38,21 @@ extern "C"
     /**
      * @brief Ensure deki-input package is loaded and components are registered
      */
-    DEKI_INPUT_API int DekiInput_EnsureRegistered(void)
+    DEKI_INPUT_API int DekiInputEnsureRegistered(void)
     {
         if (s_InputRegistered)
         {
-            return ::DekiInput_GetAutoComponentCount();
+            return ::DekiInputGetAutoComponentCount();
         }
         s_InputRegistered = true;
 
-        ::DekiInput_RegisterComponents();
+        ::DekiInputRegisterComponents();
 
         // Initialize input system (idempotent — may already be initialized
-        // by deki_init_package_systems() during Deki::Engine::Initialize())
-        DekiInput_InitSystem();
+        // by DekiInitPackageSystems() during Deki::Engine::Initialize())
+        DekiInputInitSystem();
 
-        return ::DekiInput_GetAutoComponentCount();
+        return ::DekiInputGetAutoComponentCount();
     }
 
 }  // extern "C"
@@ -65,12 +65,12 @@ extern "C"
 extern "C"
 {
 #ifndef DEKI_PLUGIN_EXPORTS
-    DEKI_PLUGIN_API const char* DekiPlugin_GetName(void)
+    DEKI_PLUGIN_API const char* DekiPluginGetName(void)
     {
         return "Deki Input Package";
     }
 
-    DEKI_PLUGIN_API const char* DekiPlugin_GetVersion(void)
+    DEKI_PLUGIN_API const char* DekiPluginGetVersion(void)
     {
 #ifdef DEKI_PACKAGE_VERSION
         return DEKI_PACKAGE_VERSION;
@@ -79,30 +79,30 @@ extern "C"
 #endif
     }
 
-    DEKI_PLUGIN_API int DekiPlugin_Init(void)
+    DEKI_PLUGIN_API int DekiPluginInit(void)
     {
         return 0;
     }
 
-    DEKI_PLUGIN_API void DekiPlugin_Shutdown(void)
+    DEKI_PLUGIN_API void DekiPluginShutdown(void)
     {
-        DekiInput_ShutdownSystem();
+        DekiInputShutdownSystem();
         s_InputRegistered = false;
     }
 
-    DEKI_PLUGIN_API int DekiPlugin_GetComponentCount(void)
+    DEKI_PLUGIN_API int DekiPluginGetComponentCount(void)
     {
-        return ::DekiInput_GetAutoComponentCount();
+        return ::DekiInputGetAutoComponentCount();
     }
 
-    DEKI_PLUGIN_API const Deki::ComponentMeta* DekiPlugin_GetComponentMeta(int index)
+    DEKI_PLUGIN_API const Deki::ComponentMeta* DekiPluginGetComponentMeta(int index)
     {
-        return ::DekiInput_GetAutoComponentMeta(index);
+        return ::DekiInputGetAutoComponentMeta(index);
     }
 
-    DEKI_PLUGIN_API void DekiPlugin_RegisterComponents(void)
+    DEKI_PLUGIN_API void DekiPluginRegisterComponents(void)
     {
-        DekiInput_EnsureRegistered();
+        DekiInputEnsureRegistered();
     }
 
 #endif  // DEKI_PLUGIN_EXPORTS
@@ -111,7 +111,7 @@ extern "C"
     // Package-specific feature API
     // =============================================================================
 
-    DEKI_INPUT_API const char* DekiInput_GetName(void)
+    DEKI_INPUT_API const char* DekiInputGetName(void)
     {
         return "Input";
     }

@@ -62,14 +62,14 @@ TEST(TrackballKeys, AStepIsAnArrowPressedThenReleased)
     b.Frame();
     auto e = b.Take();
     ASSERT_EQ(e.size(), 1u);
-    EXPECT_EQ(e[0].type, InputEventType::KEY_DOWN);
+    EXPECT_EQ(e[0].type, InputEventType::KeyDown);
     EXPECT_EQ(e[0].key, Keys::Up);
     EXPECT_TRUE(b.ball.IsKeyPressed(Keys::Up));
 
     b.Frame();
     e = b.Take();
     ASSERT_EQ(e.size(), 1u);
-    EXPECT_EQ(e[0].type, InputEventType::KEY_UP);
+    EXPECT_EQ(e[0].type, InputEventType::KeyUp);
     EXPECT_EQ(e[0].key, Keys::Up);
     EXPECT_FALSE(b.ball.IsKeyPressed(Keys::Up));
 }
@@ -85,8 +85,8 @@ TEST(TrackballKeys, SeveralStepsInAFrameAreOnePressAndRollingRepeatsIt)
     b.Frame();
     auto e = b.Take();
     ASSERT_EQ(e.size(), 2u);
-    EXPECT_EQ(e[0].type, InputEventType::KEY_UP);
-    EXPECT_EQ(e[1].type, InputEventType::KEY_DOWN) << "still rolling: pressed again this frame";
+    EXPECT_EQ(e[0].type, InputEventType::KeyUp);
+    EXPECT_EQ(e[1].type, InputEventType::KeyDown) << "still rolling: pressed again this frame";
 }
 
 TEST(TrackballKeys, OppositeStepsCancelAndDiagonalsAreTwoKeys)
@@ -113,7 +113,7 @@ TEST(TrackballKeys, TheClickIsEnterHeldForAsLongAsItIsPressed)
     b.Frame();
     auto e = b.Take();
     ASSERT_EQ(e.size(), 1u);
-    EXPECT_EQ(e[0].type, InputEventType::KEY_DOWN);
+    EXPECT_EQ(e[0].type, InputEventType::KeyDown);
     EXPECT_EQ(e[0].key, Keys::Enter);
 
     b.Frame();
@@ -124,7 +124,7 @@ TEST(TrackballKeys, TheClickIsEnterHeldForAsLongAsItIsPressed)
     b.Frame();
     e = b.Take();
     ASSERT_EQ(e.size(), 1u);
-    EXPECT_EQ(e[0].type, InputEventType::KEY_UP);
+    EXPECT_EQ(e[0].type, InputEventType::KeyUp);
     EXPECT_FALSE(b.ball.IsKeyPressed(Keys::Enter));
 }
 
@@ -145,7 +145,7 @@ TEST(TrackballPointer, StartsInTheMiddleAndMovesPixelsPerStep)
     b.Frame();
     auto e = b.Take();
     ASSERT_EQ(e.size(), 1u);
-    EXPECT_EQ(e[0].type, InputEventType::MOUSE_MOVE);
+    EXPECT_EQ(e[0].type, InputEventType::MouseMove);
     EXPECT_EQ(e[0].x, 168);
     EXPECT_EQ(e[0].y, 116);
     EXPECT_FALSE(b.ball.IsKeyPressed(Keys::Right)) << "a pointer does not press arrows";
@@ -179,7 +179,7 @@ TEST(TrackballPointer, TheClickIsAMouseButtonAtThePointer)
     b.Frame();
     auto e = b.Take();
     ASSERT_EQ(e.size(), 1u);
-    EXPECT_EQ(e[0].type, InputEventType::MOUSE_BUTTON_DOWN);
+    EXPECT_EQ(e[0].type, InputEventType::MouseButtonDown);
     EXPECT_EQ(e[0].x, 160);
     EXPECT_EQ(e[0].y, 120);
 
@@ -187,7 +187,7 @@ TEST(TrackballPointer, TheClickIsAMouseButtonAtThePointer)
     b.Frame();
     e = b.Take();
     ASSERT_EQ(e.size(), 1u);
-    EXPECT_EQ(e[0].type, InputEventType::MOUSE_BUTTON_UP);
+    EXPECT_EQ(e[0].type, InputEventType::MouseButtonUp);
 }
 
 TEST(TrackballPointer, FollowsTheScreenOnceItHasASize)

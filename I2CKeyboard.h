@@ -19,7 +19,7 @@ namespace DekiInput
  * character per read, or 0 when nothing was typed.
  *
  * Such a device reports presses and never releases, so each character becomes
- * a KEY_DOWN and, on the next update, the matching KEY_UP. IsKeyPressed is
+ * a KeyDown and, on the next update, the matching KeyUp. IsKeyPressed is
  * true in between: long enough for a game that polls once a frame to see it.
  *
  * How a byte is read is handed in rather than known here, so the behaviour
@@ -79,7 +79,7 @@ private:
     uint32_t m_LastProbe = 0;
     bool m_Probed = false;
     int m_Failures = 0;
-    uint32_t m_DownKey = 0;  // awaiting its KEY_UP; 0 = none
+    uint32_t m_DownKey = 0;  // awaiting its KeyUp; 0 = none
 };
 
 }  // namespace DekiInput

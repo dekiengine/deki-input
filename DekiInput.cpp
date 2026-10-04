@@ -7,7 +7,7 @@ namespace DekiInput
 // Static member definitions
 std::map<std::string, std::unique_ptr<IDekiInput>> DekiInput::s_ActiveInputs;
 std::vector<InputEventCallback> DekiInput::s_GlobalCallbacks;
-bool DekiInput::initialized = false;
+bool DekiInput::s_Initialized = false;
 bool DekiInput::s_ShouldExit = false;
 
 bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& name)
@@ -30,7 +30,7 @@ bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& n
 
     // Store the input
     s_ActiveInputs[name] = std::move(input);
-    initialized = true;
+    s_Initialized = true;
 
     DEKI_LOG_INTERNAL("DekiInput: Input '%s' set", name.c_str());
     return true;
@@ -38,7 +38,7 @@ bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& n
 
 void DekiInput::Shutdown()
 {
-    if (!initialized)
+    if (!s_Initialized)
     {
         return;
     }
@@ -54,7 +54,7 @@ void DekiInput::Shutdown()
 
     s_ActiveInputs.clear();
     s_GlobalCallbacks.clear();
-    initialized = false;
+    s_Initialized = false;
     s_ShouldExit = false;
 
     DEKI_LOG_INTERNAL("DekiInput shutdown");
@@ -82,7 +82,7 @@ void DekiInput::ClearEventCallbacks()
 
 void DekiInput::Update()
 {
-    if (!initialized)
+    if (!s_Initialized)
     {
         return;
     }
@@ -99,7 +99,7 @@ void DekiInput::Update()
 
 bool DekiInput::GetPointerPosition(int32_t* x, int32_t* y)
 {
-    if (!initialized || !x || !y)
+    if (!s_Initialized || !x || !y)
     {
         return false;
     }
@@ -121,7 +121,7 @@ bool DekiInput::GetPointerPosition(int32_t* x, int32_t* y)
 
 bool DekiInput::IsKeyPressed(uint32_t key)
 {
-    if (!initialized)
+    if (!s_Initialized)
     {
         return false;
     }
@@ -163,11 +163,11 @@ std::vector<std::string> DekiInput::GetActiveInputs()
 
 void DekiInput::DistributeEvent(const InputEvent& event)
 {
-    // Handle APP_QUIT events
-    if (event.type == InputEventType::APP_QUIT)
+    // Handle AppQuit events
+    if (event.type == InputEventType::AppQuit)
     {
         s_ShouldExit = true;
-        DEKI_LOG_INTERNAL("DekiInput: APP_QUIT event received");
+        DEKI_LOG_INTERNAL("DekiInput: AppQuit event received");
     }
 
     // Distribute event to all registered global callbacks

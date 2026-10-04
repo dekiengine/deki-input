@@ -100,7 +100,7 @@ void Trackball::Update()
     // Last update's arrows come up first, so a roll is a press per frame.
     for (uint32_t key : m_DownKeys)
     {
-        Emit(InputEventType::KEY_UP, key, 0, 0, false);
+        Emit(InputEventType::KeyUp, key, 0, 0, false);
     }
     m_DownKeys.clear();
 
@@ -131,13 +131,13 @@ void Trackball::UpdateKeys(const Sample& s)
     }
     for (uint32_t key : m_DownKeys)
     {
-        Emit(InputEventType::KEY_DOWN, key, 0, 0, true);
+        Emit(InputEventType::KeyDown, key, 0, 0, true);
     }
 
     if (s.pressed != m_Pressed)
     {
         m_Pressed = s.pressed;
-        Emit(m_Pressed ? InputEventType::KEY_DOWN : InputEventType::KEY_UP, Keys::Enter, 0, 0, m_Pressed);
+        Emit(m_Pressed ? InputEventType::KeyDown : InputEventType::KeyUp, Keys::Enter, 0, 0, m_Pressed);
     }
 }
 
@@ -173,14 +173,14 @@ void Trackball::UpdatePointer(const Sample& s)
         {
             m_X = x;
             m_Y = y;
-            Emit(InputEventType::MOUSE_MOVE, 0, m_X, m_Y, m_Pressed);
+            Emit(InputEventType::MouseMove, 0, m_X, m_Y, m_Pressed);
         }
     }
 
     if (s.pressed != m_Pressed)
     {
         m_Pressed = s.pressed;
-        Emit(m_Pressed ? InputEventType::MOUSE_BUTTON_DOWN : InputEventType::MOUSE_BUTTON_UP, 0, m_X, m_Y, m_Pressed);
+        Emit(m_Pressed ? InputEventType::MouseButtonDown : InputEventType::MouseButtonUp, 0, m_X, m_Y, m_Pressed);
     }
 }
 

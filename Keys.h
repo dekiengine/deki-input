@@ -18,6 +18,8 @@
 namespace DekiInput::Keys
 {
 
+// Named values, used like enum values: PascalCase, as the code style allows.
+// NOLINTBEGIN(readability-identifier-naming)
 inline constexpr uint32_t Backspace = 8;
 inline constexpr uint32_t Tab = 9;
 inline constexpr uint32_t Enter = 13;
@@ -67,6 +69,7 @@ inline constexpr uint32_t W = 'w';
 inline constexpr uint32_t X = 'x';
 inline constexpr uint32_t Y = 'y';
 inline constexpr uint32_t Z = 'z';
+// NOLINTEND(readability-identifier-naming)
 
 /// The key a typed character sits on, for a keyboard that reports characters
 /// rather than keys: letters fold to lower case, everything else is itself.

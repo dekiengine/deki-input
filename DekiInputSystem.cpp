@@ -48,7 +48,7 @@ public:
         if (m_Callback)
         {
             InputEvent event{};
-            event.type = down ? InputEventType::KEY_DOWN : InputEventType::KEY_UP;
+            event.type = down ? InputEventType::KeyDown : InputEventType::KeyUp;
             event.key = key;
             event.pressed = down;
             m_Callback(event);
@@ -145,9 +145,9 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
         return;
     }
 
-    bool isDown = (event.type == InputEventType::MOUSE_BUTTON_DOWN);
-    bool isMove = (event.type == InputEventType::MOUSE_MOVE);
-    bool isUp = (event.type == InputEventType::MOUSE_BUTTON_UP);
+    bool isDown = (event.type == InputEventType::MouseButtonDown);
+    bool isMove = (event.type == InputEventType::MouseMove);
+    bool isUp = (event.type == InputEventType::MouseButtonUp);
 
     if (!isDown && !isMove && !isUp)
     {
