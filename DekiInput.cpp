@@ -26,9 +26,7 @@ bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& n
     }
 
     // Register internal callback to distribute events
-    input->RegisterEventCallback([](const InputEvent& event) {
-        DistributeEvent(event);
-    });
+    input->RegisterEventCallback([](const InputEvent& event) { DistributeEvent(event); });
 
     // Store the input
     s_ActiveInputs[name] = std::move(input);

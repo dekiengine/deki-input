@@ -30,7 +30,11 @@ namespace DekiInput
 class DEKI_INPUT_API Trackball : public IDekiInput
 {
 public:
-    enum class Mode { Keys, Pointer };
+    enum class Mode
+    {
+        Keys,
+        Pointer
+    };
 
     /// Steps since the last read, per direction, and whether the ball is
     /// pressed right now.

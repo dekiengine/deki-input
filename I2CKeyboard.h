@@ -48,7 +48,12 @@ public:
     bool IsKeyPressed(uint32_t key) const override;
 
     /// Searching until the device answers; GaveUp when it never did.
-    enum class State { Searching, Active, GaveUp };
+    enum class State
+    {
+        Searching,
+        Active,
+        GaveUp
+    };
     State GetState() const { return m_State; }
 
     // The keyboard's own controller takes a moment to start after the board

@@ -10,8 +10,8 @@ namespace DekiInput
 
 enum class TrackballMode : uint8_t
 {
-    Keys = 0,     // arrows and Enter
-    Pointer = 1   // a mouse
+    Keys = 0,    // arrows and Enter
+    Pointer = 1  // a mouse
 };
 
 /**
@@ -33,9 +33,9 @@ DEKI_DESCRIPTION("A trackball on GPIO pins, as arrow keys and Enter or as a poin
 class DEKI_INPUT_API TrackballComponent : public Deki::SetupComponent
 {
 public:
-
     DEKI_EXPORT
-    DEKI_TOOLTIP("Keys: rolling presses the arrow keys and the click is Enter. Pointer: rolling moves a pointer and the click is a mouse button.")
+    DEKI_TOOLTIP("Keys: rolling presses the arrow keys and the click is Enter. Pointer: rolling moves a pointer and "
+                 "the click is a mouse button.")
     TrackballMode mode = TrackballMode::Keys;
 
     DEKI_EXPORT

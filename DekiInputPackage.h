@@ -19,4 +19,4 @@
 #include "InputCollider.h"
 #include "DekiInputSystem.h"
 
-#endif // DEKI_PACKAGE_INPUT
+#endif  // DEKI_PACKAGE_INPUT

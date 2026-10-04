@@ -196,7 +196,12 @@ TEST(TrackballPointer, FollowsTheScreenOnceItHasASize)
     b.ball.SetMode(Trackball::Mode::Pointer);
     b.ball.SetPixelsPerStep(4);
     int32_t screenW = 0, screenH = 0;  // no display yet
-    b.ball.SetPointerAreaSource([&](int32_t& w, int32_t& h) { w = screenW; h = screenH; });
+    b.ball.SetPointerAreaSource(
+        [&](int32_t& w, int32_t& h)
+        {
+            w = screenW;
+            h = screenH;
+        });
     b.ball.Initialize();
 
     b.next.right = 1;

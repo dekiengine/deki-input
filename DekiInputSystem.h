@@ -5,9 +5,15 @@
 #include <deki/providers/IInputSystem.h>
 
 // Forward declarations
-namespace Deki { class Object; }
+namespace Deki
+{
+class Object;
+}
 
-namespace DekiRendering { class CameraComponent; }
+namespace DekiRendering
+{
+class CameraComponent;
+}
 
 namespace DekiInput
 {
@@ -36,8 +42,7 @@ public:
 
     void Initialize() override;
     void Shutdown() override;
-    void DispatchInput(Deki::Scene* scene, float x, float y,
-                       bool down, bool move, bool up) override;
+    void DispatchInput(Deki::Scene* scene, float x, float y, bool down, bool move, bool up) override;
 
     /**
      * @brief Inject a key state change from the host (editor play view).
@@ -76,8 +81,7 @@ private:
      *
      * @return true if input was consumed (a collider with consumeInput=true handled it)
      */
-    bool DispatchToObject(Deki::Object* obj, float x, float y,
-                          bool down, bool move, bool up);
+    bool DispatchToObject(Deki::Object* obj, float x, float y, bool down, bool move, bool up);
 };
 
 }  // namespace DekiInput

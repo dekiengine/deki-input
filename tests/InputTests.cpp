@@ -25,7 +25,7 @@ namespace
 // every later test through the shared static.
 class GestureFixture : public ::testing::Test
 {
-   protected:
+protected:
     void SetUp() override { InputDispatch::ReleaseGesture(); }
     void TearDown() override { InputDispatch::ReleaseGesture(); }
 };
@@ -33,7 +33,7 @@ class GestureFixture : public ::testing::Test
 // A collider centred on the origin unless the test moves the object.
 struct Box
 {
-    Deki::Object object{"box"};
+    Deki::Object object{ "box" };
     InputCollider* collider = nullptr;
 
     Box(float w, float h)

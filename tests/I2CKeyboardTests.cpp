@@ -37,7 +37,10 @@ struct Bench
               [this](uint8_t& out)
               {
                   ++reads;
-                  if (!answers) return false;
+                  if (!answers)
+                  {
+                      return false;
+                  }
                   out = 0;
                   if (!typed.empty())
                   {
@@ -157,7 +160,9 @@ TEST(I2CKeyboard, AKeyboardStillStartingIsFoundLater)
 
     // Not probed every frame: an unanswered probe is a bus timeout.
     for (int i = 0; i < 10; ++i)
+    {
         b.Frame(16);
+    }
     EXPECT_LE(b.probes, 2);
 
     b.present = true;
@@ -176,12 +181,16 @@ TEST(I2CKeyboard, ABoardWithoutOneStopsBeingAsked)
     b.present = false;
 
     for (uint32_t t = 0; t <= I2CKeyboard::kGiveUpAfterMs + 1000; t += 100)
+    {
         b.Frame(100);
+    }
     EXPECT_EQ(b.keyboard.GetState(), I2CKeyboard::State::GaveUp);
 
     const int probes = b.probes;
     for (int i = 0; i < 100; ++i)
+    {
         b.Frame(100);
+    }
     EXPECT_EQ(b.probes, probes);
     EXPECT_EQ(b.reads, 0);
     EXPECT_TRUE(b.events.empty());
@@ -199,7 +208,9 @@ TEST(I2CKeyboard, OneThatStopsAnsweringIsLookedForAgainAndAHeldKeyIsReleased)
     b.answers = false;
     b.present = false;
     for (int i = 0; i < I2CKeyboard::kLostAfterFailures + 1; ++i)
+    {
         b.Frame();
+    }
 
     EXPECT_FALSE(b.keyboard.IsKeyPressed(Keys::X)) << "a key must not stay down because the bus went quiet";
     EXPECT_EQ(b.keyboard.GetState(), I2CKeyboard::State::Searching);

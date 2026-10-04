@@ -9,12 +9,15 @@
 namespace DekiInput
 {
 
-
 I2CKeyboard::I2CKeyboard(ReadByte read, Probe probe, Clock clock)
-    : m_Read(std::move(read)), m_Probe(std::move(probe)), m_Clock(std::move(clock))
+    : m_Read(std::move(read)),
+      m_Probe(std::move(probe)),
+      m_Clock(std::move(clock))
 {
     if (!m_Clock)
+    {
         m_Clock = []() { return Deki::Time::GetTime(); };
+    }
 }
 
 bool I2CKeyboard::Initialize()
@@ -58,7 +61,9 @@ void I2CKeyboard::Emit(InputEventType type, uint32_t key, uint32_t character)
     event.pressed = (type == InputEventType::KEY_DOWN);
     event.timestamp = m_Clock();
     for (const auto& callback : m_Callbacks)
+    {
         callback(event);
+    }
 }
 
 void I2CKeyboard::Search(uint32_t now)
@@ -92,7 +97,9 @@ void I2CKeyboard::Search(uint32_t now)
 void I2CKeyboard::Update()
 {
     if (!m_Initialized)
+    {
         return;
+    }
 
     // Last update's press is released first, so a key typed twice in a row is
     // two presses rather than one long one.
@@ -104,7 +111,9 @@ void I2CKeyboard::Update()
     }
 
     if (m_State == State::GaveUp)
+    {
         return;
+    }
     if (m_State == State::Searching)
     {
         Search(m_Clock());
@@ -125,7 +134,9 @@ void I2CKeyboard::Update()
     m_Failures = 0;
 
     if (byte == 0)
+    {
         return;
+    }
 
     m_DownKey = Keys::ForCharacter(byte);
     // Control codes (Enter, Backspace, Tab) are keys that type nothing.

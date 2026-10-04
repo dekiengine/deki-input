@@ -62,7 +62,7 @@ private:
 
 constexpr const char* kInjectedKeyboardName = "Injected";
 
-} // namespace
+}  // namespace
 
 DekiInputSystem::DekiInputSystem()
 {
@@ -76,12 +76,12 @@ DekiInputSystem::~DekiInputSystem()
 void DekiInputSystem::Initialize()
 {
     if (m_Initialized)
+    {
         return;
+    }
 
     // Register callback on DekiInput to receive input events
-    DekiInput::RegisterEventCallback([this](const InputEvent& event) {
-        OnInputEvent(event);
-    });
+    DekiInput::RegisterEventCallback([this](const InputEvent& event) { OnInputEvent(event); });
 
     m_Initialized = true;
 }
@@ -118,7 +118,9 @@ void DekiInputSystem::DispatchKey(uint32_t key, bool down)
         DekiInput::SetInput(std::make_unique<InjectedKeyboard>(), kInjectedKeyboardName);
         driver = DekiInput::GetInput(kInjectedKeyboardName);
         if (!driver)
+        {
             return;
+        }
     }
 
     static_cast<InjectedKeyboard*>(driver)->SetKey(key, down);
@@ -133,18 +135,24 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
 {
     Deki::Engine& engine = Deki::Engine::GetInstance();
     if (!engine.IsInitialized())
+    {
         return;
+    }
 
     Deki::Scene* scene = engine.GetRootScene();
     if (!scene)
+    {
         return;
+    }
 
     bool isDown = (event.type == InputEventType::MOUSE_BUTTON_DOWN);
     bool isMove = (event.type == InputEventType::MOUSE_MOVE);
-    bool isUp   = (event.type == InputEventType::MOUSE_BUTTON_UP);
+    bool isUp = (event.type == InputEventType::MOUSE_BUTTON_UP);
 
     if (!isDown && !isMove && !isUp)
+    {
         return;
+    }
 
     float worldX = static_cast<float>(event.x);
     float worldY = static_cast<float>(event.y);
@@ -155,8 +163,7 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
     if (cam && engine.GetRenderSystem())
     {
         cam->ScreenToWorld(static_cast<float>(event.x), static_cast<float>(event.y),
-                           engine.GetRenderSystem()->GetScreenWidth(),
-                           engine.GetRenderSystem()->GetScreenHeight(),
+                           engine.GetRenderSystem()->GetScreenWidth(), engine.GetRenderSystem()->GetScreenHeight(),
                            worldX, worldY);
     }
 #endif
@@ -168,10 +175,16 @@ void DekiInputSystem::OnInputEvent(const InputEvent& event)
 static DekiRendering::CameraComponent* FindCameraRecursive(Deki::Object* obj)
 {
     if (DekiRendering::CameraComponent* c = obj->GetComponent<DekiRendering::CameraComponent>())
+    {
         return c;
+    }
     for (Deki::Object* child : obj->GetChildren())
+    {
         if (DekiRendering::CameraComponent* c = FindCameraRecursive(child))
+        {
             return c;
+        }
+    }
     return nullptr;
 }
 
@@ -187,18 +200,22 @@ DekiRendering::CameraComponent* DekiInputSystem::FindCamera(Deki::Scene* scene)
         for (Deki::Object* obj : scene->GetObjects())
         {
             m_CachedCamera = FindCameraRecursive(obj);
-            if (m_CachedCamera) break;
+            if (m_CachedCamera)
+            {
+                break;
+            }
         }
     }
     return m_CachedCamera;
 }
 #endif
 
-void DekiInputSystem::DispatchInput(Deki::Scene* scene, float x, float y,
-                                     bool down, bool move, bool up)
+void DekiInputSystem::DispatchInput(Deki::Scene* scene, float x, float y, bool down, bool move, bool up)
 {
     if (!scene)
+    {
         return;
+    }
 
     for (Deki::Object* obj : scene->GetObjects())
     {
@@ -206,14 +223,15 @@ void DekiInputSystem::DispatchInput(Deki::Scene* scene, float x, float y,
     }
 }
 
-bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y,
-                                        bool down, bool move, bool up)
+bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y, bool down, bool move, bool up)
 {
     // An inactive object is invisible (the renderer skips it), so it must not
     // take input either: a hidden menu's buttons kept firing onClick. Parents
     // are checked on the way down, so IsActive() alone is the full test here.
     if (!obj || !obj->IsActive())
+    {
         return false;
+    }
 
     // Phase 1: Recurse to children FIRST (deepest child gets priority)
     // All siblings are dispatched so they can track hover state (pointer_exit).
@@ -221,7 +239,9 @@ bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y,
     for (Deki::Object* child : obj->GetChildren())
     {
         if (DispatchToObject(child, x, y, down, move, up))
+        {
             childConsumed = true;
+        }
     }
 
     // Phase 2: Process this object's InputCollider. Left out with the
@@ -238,7 +258,9 @@ bool DekiInputSystem::DispatchToObject(Deki::Object* obj, float x, float y,
             {
                 bool handled = collider->ProcessInput(x, y, down, move, up);
                 if (handled && collider->consumeInput)
+                {
                     return true;
+                }
             }
             break;
         }

@@ -16,7 +16,9 @@ using namespace DekiInput;
 void DekiInput_InitSystem()
 {
     if (s_InputSystem)
+    {
         return;
+    }
 
     s_InputSystem = new DekiInputSystem();
     s_InputSystem->Initialize();
@@ -28,7 +30,9 @@ void DekiInput_InitSystem()
 void DekiInput_ShutdownSystem()
 {
     if (!s_InputSystem)
+    {
         return;
+    }
 
     Deki::Engine::GetInstance().SetInputSystem(nullptr);
     s_InputSystem->Shutdown();

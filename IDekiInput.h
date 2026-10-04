@@ -29,9 +29,9 @@ enum class InputEventType
 struct InputEvent
 {
     InputEventType type;
-    int32_t x, y;  // Position for mouse/touch events
-    uint32_t key;  // Key id for keyboard events: see Keys.h
-    bool pressed;  // Button/key state
+    int32_t x, y;        // Position for mouse/touch events
+    uint32_t key;        // Key id for keyboard events: see Keys.h
+    bool pressed;        // Button/key state
     uint32_t timestamp;  // Event timestamp
 
     // What a KEY_DOWN types, as a code point: 'A' for shift and the A key,
@@ -53,7 +53,7 @@ using InputEventCallback = std::function<void(const InputEvent& event)>;
  */
 class IDekiInput
 {
-   public:
+public:
     virtual ~IDekiInput() = default;
 
     /**

@@ -7,7 +7,10 @@
 #include <deki/Component.h>
 #include <deki/reflection/Property.h>
 
-namespace Deki { class Object; }
+namespace Deki
+{
+class Object;
+}
 
 namespace DekiInput
 {
@@ -43,7 +46,6 @@ DEKI_DESCRIPTION("Hit area for pointer and touch. Buttons and scrolls listen to 
 DEKI_FORMER_NAME("InputCollider")
 class InputCollider : public Deki::Component
 {
-
 public:
     // Hit area dimensions (meters)
     DEKI_EXPORT
@@ -58,7 +60,8 @@ public:
 
     // Hit area padding (meters, expands the hit area beyond width/height)
     DEKI_EXPORT
-    DEKI_TOOLTIP("Extra hit area beyond the left edge, in meters. Useful for making a small control comfortable to hit with a finger without making it look bigger.")
+    DEKI_TOOLTIP("Extra hit area beyond the left edge, in meters. Useful for making a small control comfortable to hit "
+                 "with a finger without making it look bigger.")
     DEKI_UNIT(Distance)
     float paddingLeft = 0.0f;
 
@@ -79,7 +82,8 @@ public:
 
     // When true, blocks input from reaching child objects
     DEKI_EXPORT
-    DEKI_TOOLTIP("Stop the press here instead of letting it reach objects underneath. Turn it off for an overlay that should not block what is behind it.")
+    DEKI_TOOLTIP("Stop the press here instead of letting it reach objects underneath. Turn it off for an overlay that "
+                 "should not block what is behind it.")
     bool consumeInput = true;
 
     // --- Pointer event callbacks ---

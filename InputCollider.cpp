@@ -21,7 +21,9 @@ bool InputCollider::HitTest(float x, float y) const
 {
     Deki::Object* owner = GetOwner();
     if (!owner)
+    {
         return false;
+    }
 
     const float ownerX = owner->GetWorldX();
     const float ownerY = owner->GetWorldY();
@@ -30,12 +32,10 @@ bool InputCollider::HitTest(float x, float y) const
     // (Y-down, top-left origin). Object position is the visual center
     // (pivot 0.5), so the box spans (ownerX - w/2, ownerY + h/2) to
     // (ownerX + w/2, ownerY - h/2) in world (Y-up) terms.
-    const float localX = (x - ownerX) + width  * 0.5f;
+    const float localX = (x - ownerX) + width * 0.5f;
     const float localY = (ownerY - y) + height * 0.5f;
 
-    return localX >= -paddingLeft  &&
-           localX <= width  + paddingRight &&
-           localY >= -paddingTop   &&
+    return localX >= -paddingLeft && localX <= width + paddingRight && localY >= -paddingTop &&
            localY <= height + paddingBottom;
 }
 
@@ -44,7 +44,9 @@ bool InputCollider::ProcessInput(float x, float y, bool down, bool move, bool up
     // If another component has claimed the gesture (e.g. scroll is dragging),
     // suppress all input on consuming colliders — no hover, no press, nothing.
     if (consumeInput && InputDispatch::IsGestureClaimed())
+    {
         return false;
+    }
 
     bool inside = HitTest(x, y);
     bool handled = false;
@@ -112,16 +114,23 @@ void InputCollider::CancelInput()
     m_PointerInside = false;
 
     if (wasPressed)
+    {
         InvokeCallbacks(onPointerUp, 0.0f, 0.0f);
+    }
     if (wasInside)
+    {
         InvokeCallbacks(onPointerExit, 0.0f, 0.0f);
+    }
 }
 
 void InputCollider::InvokeCallbacks(const std::vector<PointerCallback>& callbacks, float x, float y)
 {
     for (const auto& cb : callbacks)
     {
-        if (cb) cb(x, y);
+        if (cb)
+        {
+            cb(x, y);
+        }
     }
 }
 
