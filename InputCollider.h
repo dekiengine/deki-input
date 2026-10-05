@@ -36,7 +36,6 @@ namespace DekiInput
 ///     });
 DEKI_CATEGORY("Input")
 DEKI_DESCRIPTION("Hit area for pointer and touch. Buttons and scrolls listen to it.")
-DEKI_FORMER_NAME("InputCollider")
 class InputCollider : public Deki::Component
 {
 public:

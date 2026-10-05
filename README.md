@@ -15,8 +15,6 @@ using namespace DekiInput;
 obj->AddComponent<SomeComponent>();
 ```
 
-Scenes saved before 0.16.0 used bare names and still load; saving writes the current one.
-
 ## Keys
 
 `Keys.h` names the keys every driver reports:
