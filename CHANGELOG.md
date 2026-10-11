@@ -8,6 +8,24 @@ breaking change bumps the minor across the editor, the engine and every
 package together, so a package with no changes of its own is still released
 alongside one that has them.
 
+## Unreleased
+
+### Added
+- **The keyboard's backlight**: `I2CKeyboard::SetBacklight(0-255)`, for a
+  keyboard that sets it itself over the bus (`hasBacklight` on
+  I2CKeyboardComponent; the LilyGO T-Deck's takes it in register 0x01).
+- **The trackball can move like a ThinkPad TrackPoint** (pointer mode,
+  `glideMs` and `acceleration` on TrackballComponent): rolling sets the
+  pointer going and it glides on briefly after the ball stops, and spinning
+  the ball fast carries it further per step. `glideMs` 0, the default, moves
+  it exactly by the steps rolled, as before.
+- `InputEvent::source`: the name the source that sent an event was
+  registered under ("I2CKeyboard", "Trackball", "SDL3", ...), so a listener
+  can tell a trackball's arrows from a keyboard's.
+- `RegisterEventCallback` returns an id, and `UnregisterEventCallback(id)`
+  removes the callback. A component that listens must stop before it is
+  destroyed; there was no way to.
+
 ## 0.18.0
 
 ### Changed

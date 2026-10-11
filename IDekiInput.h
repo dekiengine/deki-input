@@ -33,6 +33,11 @@ struct InputEvent
     // driver only knows keys, not text. Last and defaulted so drivers written
     // before it need no change.
     uint32_t character = 0;
+
+    // The name the source that sent it was registered under (DekiInput::
+    // SetInput): "I2CKeyboard", "Trackball", "SDL3", ... Set by DekiInput as
+    // it passes the event on; nullptr in a driver's own callbacks.
+    const char* source = nullptr;
 };
 
 // Input event callback function type

@@ -40,6 +40,11 @@ void I2CKeyboardComponent::Setup(SetupCallback onComplete)
     auto keyboard =
         std::make_unique<I2CKeyboard>([bus, address](uint8_t& out) { return bus->ReadRaw(address, &out, 1); },
                                       [bus, address]() { return bus->Probe(address); });
+    if (hasBacklight)
+    {
+        keyboard->SetBacklightWriter([bus, address](uint8_t reg, uint8_t value)
+                                     { return bus->Write(address, reg, &value, 1); });
+    }
 
     if (keyboard->Initialize())
     {

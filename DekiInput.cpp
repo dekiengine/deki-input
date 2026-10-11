@@ -24,10 +24,17 @@ bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& n
         return true;
     }
 
-    // Register internal callback to distribute events
-    input->RegisterEventCallback([](const InputEvent& event) { DistributeEvent(event); });
-
-    s_ActiveInputs[name] = std::move(input);
+    // Register internal callback to distribute events, tagged with the name
+    // the source is known by. The map's key lives as long as the entry.
+    auto entry = s_ActiveInputs.emplace(name, std::move(input)).first;
+    const char* source = entry->first.c_str();
+    entry->second->RegisterEventCallback(
+        [source](const InputEvent& event)
+        {
+            InputEvent tagged = event;
+            tagged.source = source;
+            DistributeEvent(tagged);
+        });
     s_Initialized = true;
 
     DEKI_LOG_INTERNAL("DekiInput: Input '%s' set", name.c_str());
@@ -67,9 +74,28 @@ IDekiInput* DekiInput::GetInput(const std::string& name)
     return nullptr;
 }
 
-void DekiInput::RegisterEventCallback(const InputEventCallback& callback)
+size_t DekiInput::RegisterEventCallback(const InputEventCallback& callback)
 {
+    // A slot a removed callback left, else a new one: ids stay valid, as
+    // they are positions.
+    for (size_t i = 0; i < s_GlobalCallbacks.size(); ++i)
+    {
+        if (!s_GlobalCallbacks[i])
+        {
+            s_GlobalCallbacks[i] = callback;
+            return i;
+        }
+    }
     s_GlobalCallbacks.push_back(callback);
+    return s_GlobalCallbacks.size() - 1;
+}
+
+void DekiInput::UnregisterEventCallback(size_t id)
+{
+    if (id < s_GlobalCallbacks.size())
+    {
+        s_GlobalCallbacks[id] = nullptr;
+    }
 }
 
 void DekiInput::ClearEventCallbacks()
@@ -165,8 +191,12 @@ void DekiInput::DistributeEvent(const InputEvent& event)
         DEKI_LOG_INTERNAL("DekiInput: AppQuit event received");
     }
 
-    for (const auto& callback : s_GlobalCallbacks)
+    // By position, as a callback may add or remove callbacks; each is called
+    // through a copy, so one that removes itself is not destroyed while it
+    // runs.
+    for (size_t i = 0; i < s_GlobalCallbacks.size(); ++i)
     {
+        const InputEventCallback callback = s_GlobalCallbacks[i];
         if (callback)
         {
             callback(event);

@@ -85,6 +85,8 @@ void TrackballComponent::Setup(SetupCallback onComplete)
 
     ball->SetMode(mode == TrackballMode::Pointer ? Trackball::Mode::Pointer : Trackball::Mode::Keys);
     ball->SetPixelsPerStep(pixelsPerStep);
+    ball->SetGlideMs(glideMs);
+    ball->SetAcceleration(acceleration);
     // The screen: the framebuffer, sized once the display is set up.
     ball->SetPointerAreaSource(
         [](int32_t& w, int32_t& h)

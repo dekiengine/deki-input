@@ -39,6 +39,11 @@ public:
     DEKI_RANGE(0, 127)
     int32_t i2cAddress = 0x55;
 
+    DEKI_EXPORT
+    DEKI_TOOLTIP("The keyboard has a backlight it controls itself, set over the bus (the LilyGO T-Deck's: brightness "
+                 "in register 0x01). Game code then sets it with I2CKeyboard::SetBacklight.")
+    bool hasBacklight = false;
+
     void Setup(SetupCallback onComplete) override;
     const char* GetSetupName() const override { return "I2C Keyboard"; }
 };

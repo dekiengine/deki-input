@@ -66,6 +66,12 @@ void I2CKeyboard::Emit(InputEventType type, uint32_t key, uint32_t character)
     }
 }
 
+bool I2CKeyboard::SetBacklight(uint8_t level)
+{
+    m_Backlight = level;
+    return m_WriteRegister && m_WriteRegister(kBacklightRegister, level);
+}
+
 void I2CKeyboard::Search(uint32_t now)
 {
     if (!m_Probed)

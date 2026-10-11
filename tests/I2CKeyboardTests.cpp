@@ -12,6 +12,7 @@
 #include <Keys.h>
 
 #include <deque>
+#include <utility>
 #include <vector>
 
 using namespace DekiInput;
@@ -228,4 +229,26 @@ TEST(Keys, ACharacterFoldsToItsKey)
     EXPECT_EQ(Keys::ForCharacter('7'), Keys::Num7);
     EXPECT_EQ(Keys::ForCharacter(' '), Keys::Space);
     EXPECT_EQ(Keys::ForCharacter('!'), uint32_t('!'));
+}
+
+TEST(I2CKeyboard, TheBacklightIsWrittenToItsRegisterWhenThereIsOne)
+{
+    I2CKeyboard none([](uint8_t&) { return false; }, []() { return true; }, []() { return 0u; });
+    EXPECT_FALSE(none.HasBacklight());
+    EXPECT_FALSE(none.SetBacklight(200));
+
+    std::vector<std::pair<uint8_t, uint8_t>> writes;
+    I2CKeyboard lit([](uint8_t&) { return false; }, []() { return true; }, []() { return 0u; });
+    lit.SetBacklightWriter(
+        [&writes](uint8_t reg, uint8_t value)
+        {
+            writes.emplace_back(reg, value);
+            return true;
+        });
+    EXPECT_TRUE(lit.HasBacklight());
+    EXPECT_TRUE(lit.SetBacklight(200));
+    ASSERT_EQ(writes.size(), 1u);
+    EXPECT_EQ(writes[0].first, I2CKeyboard::kBacklightRegister);
+    EXPECT_EQ(writes[0].second, 200);
+    EXPECT_EQ(lit.GetBacklight(), 200);
 }

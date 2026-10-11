@@ -224,3 +224,71 @@ TEST(TrackballPointer, FollowsTheScreenOnceItHasASize)
     ASSERT_EQ(e.size(), 1u);
     EXPECT_EQ(e[0].x, 639);
 }
+
+TEST(TrackballPointer, WithAGlideAStepKeepsMovingAfterTheBallStopsThenStops)
+{
+    Bench b;
+    b.ball.SetMode(Trackball::Mode::Pointer);
+    b.ball.SetPixelsPerStep(8);
+    b.ball.SetGlideMs(100.0f);
+    b.Frame();  // settle the clock
+    int32_t x = 0, y = 0;
+    b.ball.GetPointerPosition(&x, &y);
+    const int32_t start = x;
+
+    b.next.right = 1;
+    b.Frame();
+    b.ball.GetPointerPosition(&x, &y);
+    const int32_t afterStep = x;
+    EXPECT_GT(afterStep, start);
+    EXPECT_LT(afterStep - start, 8);  // not all at once
+
+    for (int i = 0; i < 60; ++i)
+    {
+        b.Frame();  // the ball has stopped; the pointer glides on
+    }
+    b.ball.GetPointerPosition(&x, &y);
+    EXPECT_GT(x, afterStep);
+    EXPECT_NEAR(x - start, 8, 2);  // about one step's worth in all
+    EXPECT_EQ(y, 120);
+
+    const int32_t settled = x;
+    for (int i = 0; i < 10; ++i)
+    {
+        b.Frame();
+    }
+    b.ball.GetPointerPosition(&x, &y);
+    EXPECT_EQ(x, settled);  // and then it stops
+}
+
+TEST(TrackballPointer, SpinningFastCarriesFurtherPerStepThanRollingSlowly)
+{
+    auto travel = [](uint32_t stepsPerFrame, int frames)
+    {
+        Bench b;
+        b.ball.SetMode(Trackball::Mode::Pointer);
+        b.ball.SetPixelsPerStep(1);
+        b.ball.SetGlideMs(50.0f);
+        b.ball.SetAcceleration(4.0f);
+        b.Frame();
+        int32_t x = 0, y = 0;
+        b.ball.GetPointerPosition(&x, &y);
+        const int32_t start = x;
+        for (int i = 0; i < frames; ++i)
+        {
+            b.next.right = stepsPerFrame;
+            b.Frame();
+        }
+        for (int i = 0; i < 60; ++i)
+        {
+            b.Frame();
+        }
+        b.ball.GetPointerPosition(&x, &y);
+        return static_cast<float>(x - start) / static_cast<float>(stepsPerFrame * frames);
+    };
+    // About 4 steps a second, then about 120: per step, the fast spin goes
+    // several times as far.
+    const float slow = travel(1, 1);
+    const float fast = travel(2, 6);
+    EXPECT_GT(fast, slow * 2.0f);
+}

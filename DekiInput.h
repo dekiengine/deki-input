@@ -36,8 +36,15 @@ public:
     /// The input source registered under `name`, or nullptr.
     static IDekiInput* GetInput(const std::string& name);
 
-    /// Adds a callback that receives events from ALL input sources.
-    static void RegisterEventCallback(const InputEventCallback& callback);
+    /// Adds a callback that receives events from ALL input sources. Returns
+    /// an id for UnregisterEventCallback.
+    static size_t RegisterEventCallback(const InputEventCallback& callback);
+
+    /// Removes the callback RegisterEventCallback returned `id` for. A
+    /// component that listens must stop before it is destroyed (OnDestroy),
+    /// or the callback is called on a freed object. Safe from inside a
+    /// callback, including the one being removed.
+    static void UnregisterEventCallback(size_t id);
 
     /// Removes every global event callback. Call it before freeing a DLL that
     /// registered callbacks, or the std::function objects point into freed

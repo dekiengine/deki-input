@@ -20,7 +20,10 @@ namespace DekiInput
 ///            next frame, so rolling repeats. For a menu or a grid game.
 ///   Pointer  the ball moves a pointer across the screen, `pixelsPerStep` per
 ///            step, and the click is a mouse button. For anything that
-///            already works with touch.
+///            already works with touch. With a glide set, it moves like a
+///            ThinkPad TrackPoint instead: rolling sets the pointer going, it
+///            keeps gliding a little after the ball stops, and spinning the
+///            ball fast carries it further per step (acceleration).
 ///
 /// Reading the lines is passed in, so the behaviour is testable without pins.
 /// TrackballComponent supplies the GPIO one.
@@ -56,6 +59,14 @@ public:
     using AreaSource = std::function<void(int32_t& width, int32_t& height)>;
     void SetPointerAreaSource(AreaSource source) { m_AreaSource = std::move(source); }
     void SetPixelsPerStep(int32_t pixels) { m_PixelsPerStep = pixels > 0 ? pixels : 1; }
+    /// Pointer mode: how long the pointer keeps gliding after a step, as the
+    /// time its speed takes to fall to about a third. 0 moves it straight by
+    /// the step, as before.
+    void SetGlideMs(float ms) { m_GlideMs = ms > 0.0f ? ms : 0.0f; }
+    /// Pointer mode, with a glide: how many times further a step carries the
+    /// pointer when the ball spins fast than when it rolls slowly. 1: no
+    /// acceleration.
+    void SetAcceleration(float factor) { m_Acceleration = factor > 1.0f ? factor : 1.0f; }
 
     bool Initialize() override;
     void Shutdown() override;
@@ -69,6 +80,8 @@ private:
     void Emit(InputEventType type, uint32_t key, int32_t x, int32_t y, bool pressed);
     void UpdateKeys(const Sample& s);
     void UpdatePointer(const Sample& s);
+    // The pointer's move this update with a glide, in whole pixels.
+    void Glide(int32_t stepsX, int32_t stepsY, int32_t& dx, int32_t& dy);
 
     Read m_Read;
     Clock m_Clock;
@@ -81,6 +94,17 @@ private:
     int32_t m_PixelsPerStep = 4;
     int32_t m_Width = 320, m_Height = 240;
     int32_t m_X = 160, m_Y = 120;
+
+    // Pointer mode with a glide: the exact position and speed (pixels and
+    // pixels a second), how fast the ball has been turning (steps a second),
+    // and when the last update was.
+    float m_GlideMs = 0.0f;
+    float m_Acceleration = 1.0f;
+    float m_FX = 160.0f, m_FY = 120.0f;
+    float m_VX = 0.0f, m_VY = 0.0f;
+    float m_StepRate = 0.0f;
+    uint32_t m_LastUpdateMs = 0;
+    bool m_HaveLastUpdate = false;
 
     bool m_Pressed = false;
     // Keys mode: the arrows put down last update, to be released this one.

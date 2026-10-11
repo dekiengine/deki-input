@@ -41,6 +41,18 @@ public:
     DEKI_RANGE(1, 64)
     int32_t pixelsPerStep = 4;
 
+    DEKI_EXPORT
+    DEKI_TOOLTIP("Pointer mode: how long the pointer keeps gliding after the ball stops, in milliseconds, like a "
+                 "ThinkPad TrackPoint. 0 moves it exactly by the steps rolled.")
+    DEKI_RANGE(0, 1000)
+    float glideMs = 0.0f;
+
+    DEKI_EXPORT
+    DEKI_TOOLTIP("Pointer mode with a glide: how many times further each step carries the pointer when the ball is "
+                 "spun fast than when it is rolled slowly. 1: no acceleration.")
+    DEKI_RANGE(1, 8)
+    float acceleration = 1.0f;
+
     DEKI_GROUP("Pins")
     DEKI_EXPORT
     DEKI_TOOLTIP("The line that pulses when the ball rolls up")
