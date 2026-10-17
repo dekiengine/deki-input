@@ -25,18 +25,19 @@
 var NAVTREE =
 [
   [ "deki-input", "index.html", [
-    [ "Components", "index.html#autotoc_md0", null ],
-    [ "Feature flags", "index.html#autotoc_md1", null ],
-    [ "Component reference", "index.html#autotoc_md2", [
-      [ "InputCollider", "index.html#c-inputcollider", null ]
+    [ "Components", "index.html#components", null ],
+    [ "Feature flags", "index.html#feature-flags", null ],
+    [ "Component reference", "index.html#component-reference", [
+      [ "I2CKeyboardComponent", "index.html#c-i2ckeyboardcomponent", null ],
+      [ "InputCollider", "index.html#c-inputcollider", null ],
+      [ "TrackballComponent", "index.html#c-trackballcomponent", null ]
     ] ],
-    [ "Changelog", "index.html#autotoc_md3", [
-      [ "0.16.0", "index.html#autotoc_md4", null ],
-      [ "Fixed", "index.html#autotoc_md5", null ],
-      [ "Changed", "index.html#autotoc_md6", null ],
-      [ "0.15.0", "index.html#autotoc_md7", null ],
-      [ "Added", "index.html#autotoc_md8", null ],
-      [ "Fixed", "index.html#autotoc_md9", null ]
+    [ "Changelog", "index.html#changelog", [
+      [ "0.19.0", "index.html#autotoc_md0", null ],
+      [ "Changed", "index.html#autotoc_md1", null ],
+      [ "Added", "index.html#autotoc_md2", null ],
+      [ "0.18.2", "index.html#autotoc_md3", null ],
+      [ "Added", "index.html#autotoc_md4", null ]
     ] ]
   ] ]
 ];
