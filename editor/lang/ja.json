@@ -48,5 +48,7 @@
     "A trackball on GPIO pins, as arrow keys and Enter or as a pointer.": "GPIO ピンにつないだトラックボールです。矢印キーと Enter として、またはポインターとして使えます。",
     "Hit area for pointer and touch. Buttons and scrolls listen to it.": "ポインターとタッチの当たり判定の領域です。ボタンやスクロールはここで入力を受け取ります。",
     "Input": "入力",
-    "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "I2C で 1 回読むごとに入力された文字を 1 つ返すキーボードを読み取ります。LilyGO T-Deck のキーボードや M5Stack CardKB が該当します。"
+    "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "I2C で 1 回読むごとに入力された文字を 1 つ返すキーボードを読み取ります。LilyGO T-Deck のキーボードや M5Stack CardKB が該当します。",
+    "I2C Keyboard": "I2C キーボード",
+    "Trackball": "トラックボール"
 }

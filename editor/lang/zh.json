@@ -48,5 +48,7 @@
     "A trackball on GPIO pins, as arrow keys and Enter or as a pointer.": "接在 GPIO 引脚上的轨迹球，可用作方向键和 Enter，或用作指针。",
     "Hit area for pointer and touch. Buttons and scrolls listen to it.": "指针和触摸的点击区域。按钮和滚动组件会监听它。",
     "Input": "输入",
-    "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "读取每次 I2C 读取返回一个输入字符的键盘：如 LilyGO T-Deck 的键盘、M5Stack CardKB。"
+    "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "读取每次 I2C 读取返回一个输入字符的键盘：如 LilyGO T-Deck 的键盘、M5Stack CardKB。",
+    "I2C Keyboard": "I2C 键盘",
+    "Trackball": "轨迹球"
 }
