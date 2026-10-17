@@ -44,5 +44,9 @@
     "Glide Ms": "滑行时长 (ms)",
     "Pointer mode: how long the pointer keeps gliding after the ball stops, in milliseconds, like a ThinkPad TrackPoint. 0 moves it exactly by the steps rolled.": "指针模式：球停止后指针继续滑行的时长，单位为毫秒，类似 ThinkPad TrackPoint。0 表示严格按滚动的步数移动。",
     "Acceleration": "加速",
-    "Pointer mode with a glide: how many times further each step carries the pointer when the ball is spun fast than when it is rolled slowly. 1: no acceleration.": "带滑行的指针模式：快速转动球时，每一步带动指针的距离是慢速滚动时的多少倍。1 表示不加速。"
+    "Pointer mode with a glide: how many times further each step carries the pointer when the ball is spun fast than when it is rolled slowly. 1: no acceleration.": "带滑行的指针模式：快速转动球时，每一步带动指针的距离是慢速滚动时的多少倍。1 表示不加速。",
+    "A trackball on GPIO pins, as arrow keys and Enter or as a pointer.": "接在 GPIO 引脚上的轨迹球，可用作方向键和 Enter，或用作指针。",
+    "Hit area for pointer and touch. Buttons and scrolls listen to it.": "指针和触摸的点击区域。按钮和滚动组件会监听它。",
+    "Input": "输入",
+    "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "读取每次 I2C 读取返回一个输入字符的键盘：如 LilyGO T-Deck 的键盘、M5Stack CardKB。"
 }

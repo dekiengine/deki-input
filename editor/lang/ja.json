@@ -44,5 +44,9 @@
     "Glide Ms": "滑走時間 (ms)",
     "Pointer mode: how long the pointer keeps gliding after the ball stops, in milliseconds, like a ThinkPad TrackPoint. 0 moves it exactly by the steps rolled.": "ポインターモード: ボールが止まった後もポインターが滑り続ける時間 (ミリ秒) で、ThinkPad の TrackPoint のような動きになります。0 にすると転がしたステップ分だけ正確に動きます。",
     "Acceleration": "加速",
-    "Pointer mode with a glide: how many times further each step carries the pointer when the ball is spun fast than when it is rolled slowly. 1: no acceleration.": "滑走ありのポインターモード: ボールを速く回したとき、ゆっくり転がしたときに比べて 1 ステップでポインターが何倍遠くまで進むかです。1: 加速なし。"
+    "Pointer mode with a glide: how many times further each step carries the pointer when the ball is spun fast than when it is rolled slowly. 1: no acceleration.": "滑走ありのポインターモード: ボールを速く回したとき、ゆっくり転がしたときに比べて 1 ステップでポインターが何倍遠くまで進むかです。1: 加速なし。",
+    "A trackball on GPIO pins, as arrow keys and Enter or as a pointer.": "GPIO ピンにつないだトラックボールです。矢印キーと Enter として、またはポインターとして使えます。",
+    "Hit area for pointer and touch. Buttons and scrolls listen to it.": "ポインターとタッチの当たり判定の領域です。ボタンやスクロールはここで入力を受け取ります。",
+    "Input": "入力",
+    "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "I2C で 1 回読むごとに入力された文字を 1 つ返すキーボードを読み取ります。LilyGO T-Deck のキーボードや M5Stack CardKB が該当します。"
 }

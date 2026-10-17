@@ -44,5 +44,9 @@
     "Glide Ms": "글라이드(ms)",
     "Pointer mode: how long the pointer keeps gliding after the ball stops, in milliseconds, like a ThinkPad TrackPoint. 0 moves it exactly by the steps rolled.": "포인터 모드: 볼이 멈춘 뒤에도 포인터가 계속 미끄러지는 시간(밀리초)으로, ThinkPad TrackPoint처럼 움직입니다. 0이면 굴린 스텝만큼 정확히 움직입니다.",
     "Acceleration": "가속",
-    "Pointer mode with a glide: how many times further each step carries the pointer when the ball is spun fast than when it is rolled slowly. 1: no acceleration.": "글라이드가 있는 포인터 모드: 볼을 빠르게 돌릴 때 천천히 굴릴 때보다 한 스텝이 포인터를 몇 배 더 멀리 보내는지 지정합니다. 1: 가속 없음."
+    "Pointer mode with a glide: how many times further each step carries the pointer when the ball is spun fast than when it is rolled slowly. 1: no acceleration.": "글라이드가 있는 포인터 모드: 볼을 빠르게 돌릴 때 천천히 굴릴 때보다 한 스텝이 포인터를 몇 배 더 멀리 보내는지 지정합니다. 1: 가속 없음.",
+    "A trackball on GPIO pins, as arrow keys and Enter or as a pointer.": "GPIO 핀에 연결된 트랙볼을 방향키와 Enter 또는 포인터로 사용합니다.",
+    "Hit area for pointer and touch. Buttons and scrolls listen to it.": "포인터와 터치용 히트 영역입니다. 버튼과 스크롤이 이 영역의 입력을 받습니다.",
+    "Input": "입력",
+    "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "I2C로 한 번 읽을 때마다 입력된 문자 하나를 넘겨주는 키보드를 읽습니다. LilyGO T-Deck의 키보드와 M5Stack CardKB가 여기에 해당합니다."
 }
