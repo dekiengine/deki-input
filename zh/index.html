@@ -57,7 +57,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">deki-input<span id="projectnumber">&#160;0.19.0</span>
+   <div id="projectname">deki-input<span id="projectnumber">&#160;0.20.2</span>
    </div>
    <div id="projectbrief">Deki 包参考</div>
   </td>
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('index.html',''
 <img src="deki-input.png" alt=""/>
 </div>
     <p>输入分发和碰撞检测。将指针/触摸/按键事件分发给需要它们的组件。</p>
-<p>仓库：<a href="https://github.com/dekiengine/deki-input">github.com/dekiengine/deki-input</a> · 最新版本：0.19.0 · 需要引擎 0.19.0 或更高版本 · 依赖：<a href="https://dekiengine.github.io/deki-rendering/zh/">deki-rendering</a></p>
+<p>仓库：<a href="https://github.com/dekiengine/deki-input">github.com/dekiengine/deki-input</a> · 最新版本：0.20.0 · 需要引擎 0.19.0 或更高版本</p>
 <p>使用 <span class="tt">DekiEditor --packages-add deki-input &lt;project&gt;</span> 或通过包管理器安装。引擎自身的组件和 C++ API 见 <a href="https://dekiengine.github.io/docs/zh/">Deki 文档</a>。</p>
 <p>在编辑器中显示为 **Input**。</p>
 <h1 class="doxsection"><a class="anchor" id="components"></a>
@@ -213,30 +213,27 @@ TrackballComponent</h2>
 更新日志</h1>
 <p>更新日志为英文。</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md0"></a>
-0.19.0</h2>
+0.20.0</h2>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
+Fixed</h2>
+<ul>
+<li>The component display names the translation check had missed are translated into Japanese, Simplified Chinese and Korean.</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+0.19.0</h2>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Changed</h2>
 <ul>
 <li><span class="tt">minEngine</span> 0.19.0: built against engine 0.19.0, whose component metadata records the package each class is in. A build of this package from before does not load and is rebuilt.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Added</h2>
 <ul>
 <li>Japanese, Simplified Chinese and Korean: <span class="tt">editor/lang/ja.json</span>, <span class="tt">zh.json</span> and <span class="tt">ko.json</span> translate the names, tooltips and enum values this package's components show in the Inspector.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
-0.18.2</h2>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
-Added</h2>
-<ul>
-<li><b>The keyboard's backlight</b>: <span class="tt">I2CKeyboard::SetBacklight(0-255)</span>, for a keyboard that sets it itself over the bus (<span class="tt">hasBacklight</span> on I2CKeyboardComponent; the LilyGO T-Deck's takes it in register 0x01).</li>
-<li><b>The trackball can move like a ThinkPad TrackPoint</b> (pointer mode, <span class="tt">glideMs</span> and <span class="tt">acceleration</span> on TrackballComponent): rolling sets the pointer going and it glides on briefly after the ball stops, and spinning the ball fast carries it further per step. <span class="tt">glideMs</span> 0, the default, moves it exactly by the steps rolled, as before.</li>
-<li><span class="tt">InputEvent::source</span>: the name the source that sent an event was registered under ("I2CKeyboard", "Trackball", "SDL3", ...), so a listener can tell a trackball's arrows from a keyboard's.</li>
-<li><span class="tt">RegisterEventCallback</span> returns an id, and <span class="tt">UnregisterEventCallback(id)</span> removes the callback. A component that listens must stop before it is destroyed; there was no way to.</li>
-</ul>
 <p>更早的版本：<a href="https://github.com/dekiengine/deki-input/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
 <hr  />
-<p>由包的反射数据生成（引擎 0.19.0）。属性名就是场景文件中使用的键。重命名后会保留别名（<a href="https://github.com/dekiengine/deki-editor/blob/master/COMPATIBILITY.md">兼容性</a>）。 </p>
+<p>由包的反射数据生成（引擎 0.20.2）。属性名就是场景文件中使用的键。重命名后会保留别名（<a href="https://github.com/dekiengine/deki-editor/blob/master/COMPATIBILITY.md">兼容性</a>）。 </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
