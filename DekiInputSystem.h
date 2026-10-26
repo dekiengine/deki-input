@@ -53,9 +53,10 @@ private:
     bool m_Initialized = false;
 
     // Camera used for screen->world, found once per scene so a mouse move
-    // does not walk the whole tree. Reset when the root scene pointer changes.
+    // does not walk the whole tree. Reset when the root scene changes, told
+    // by its serial: a new scene can sit at the old one's address.
     DekiRendering::CameraComponent* m_CachedCamera = nullptr;
-    Deki::Scene* m_CachedCameraScene = nullptr;
+    uint32_t m_CachedCameraSerial = 0;
     DekiRendering::CameraComponent* FindCamera(Deki::Scene* scene);
 
     // Callback from DekiInput: converts screen to world and dispatches.

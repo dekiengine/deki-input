@@ -8,6 +8,16 @@ breaking change bumps the minor across the editor, the engine and every
 package together, so a package with no changes of its own is still released
 alongside one that has them.
 
+## Unreleased
+
+### Fixed
+- A touch or click after a scene switch no longer crashes. The camera used to
+  turn screen positions into world positions was kept per scene by the
+  scene's address, and a new scene can now be allocated at the old one's
+  address: the next press used the freed camera. It is kept by the engine's
+  root scene serial instead (`SceneSystem::GetRootSceneSerial`). Needs the
+  engine with that serial.
+
 ## 0.20.0
 
 ### Fixed

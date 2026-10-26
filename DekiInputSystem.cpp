@@ -3,6 +3,7 @@
 #include <deki/Engine.h>
 #include <deki/Object.h>
 #include <deki/Scene.h>
+#include <deki/SceneSystem.h>
 // Screen to world goes through the scene's camera, which deki-rendering
 // provides. Optional: without it, pointer positions are used as they come.
 #if __has_include("deki-rendering/CameraComponent.h")
@@ -190,10 +191,11 @@ static DekiRendering::CameraComponent* FindCameraRecursive(Deki::Object* obj)
 
 DekiRendering::CameraComponent* DekiInputSystem::FindCamera(Deki::Scene* scene)
 {
-    if (m_CachedCameraScene != scene)
+    const uint32_t serial = Deki::Engine::GetInstance().GetSceneSystem().GetRootSceneSerial();
+    if (m_CachedCameraSerial != serial)
     {
         m_CachedCamera = nullptr;
-        m_CachedCameraScene = scene;
+        m_CachedCameraSerial = serial;
     }
     if (!m_CachedCamera && scene)
     {
