@@ -1,8 +1,8 @@
 {
     "I2C Keyboard Component": "I2C 键盘组件",
-    "I 2c Port": "I2C 端口",
+    "I2C Port": "I2C 端口",
     "Which I2C bus the keyboard is on. Must match the I2C Bus component that set that port up.": "键盘所在的 I2C 总线。必须与设置该端口的 I2C 总线组件一致。",
-    "I 2c Address": "I2C 地址",
+    "I2C Address": "I2C 地址",
     "The keyboard's address on the bus: 0x55 (85) for the LilyGO T-Deck, 0x5F (95) for the M5Stack CardKB.": "键盘在总线上的地址：LilyGO T-Deck 为 0x55 (85)，M5Stack CardKB 为 0x5F (95)。",
     "Has Backlight": "有背光",
     "The keyboard has a backlight it controls itself, set over the bus (the LilyGO T-Deck's: brightness in register 0x01). Game code then sets it with I2CKeyboard::SetBacklight.": "键盘带有自行控制的背光，通过总线设置（LilyGO T-Deck 的亮度位于寄存器 0x01）。游戏代码随后可用 I2CKeyboard::SetBacklight 设置它。",

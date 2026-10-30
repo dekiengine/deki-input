@@ -1,8 +1,8 @@
 {
     "I2C Keyboard Component": "I2C 키보드 컴포넌트",
-    "I 2c Port": "I2C 포트",
+    "I2C Port": "I2C 포트",
     "Which I2C bus the keyboard is on. Must match the I2C Bus component that set that port up.": "키보드가 연결된 I2C 버스입니다. 해당 포트를 설정한 I2C Bus 컴포넌트와 일치해야 합니다.",
-    "I 2c Address": "I2C 주소",
+    "I2C Address": "I2C 주소",
     "The keyboard's address on the bus: 0x55 (85) for the LilyGO T-Deck, 0x5F (95) for the M5Stack CardKB.": "버스에서 키보드의 주소입니다. LilyGO T-Deck은 0x55(85), M5Stack CardKB는 0x5F(95)입니다.",
     "Has Backlight": "백라이트 있음",
     "The keyboard has a backlight it controls itself, set over the bus (the LilyGO T-Deck's: brightness in register 0x01). Game code then sets it with I2CKeyboard::SetBacklight.": "키보드에 자체 제어하는 백라이트가 있으며 버스를 통해 설정합니다(LilyGO T-Deck은 레지스터 0x01의 밝기). 게임 코드에서는 I2CKeyboard::SetBacklight로 설정합니다.",

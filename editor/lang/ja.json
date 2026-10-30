@@ -1,8 +1,8 @@
 {
     "I2C Keyboard Component": "I2C キーボードコンポーネント",
-    "I 2c Port": "I2C ポート",
+    "I2C Port": "I2C ポート",
     "Which I2C bus the keyboard is on. Must match the I2C Bus component that set that port up.": "キーボードがつながっている I2C バスです。そのポートを設定した I2C Bus コンポーネントと一致させてください。",
-    "I 2c Address": "I2C アドレス",
+    "I2C Address": "I2C アドレス",
     "The keyboard's address on the bus: 0x55 (85) for the LilyGO T-Deck, 0x5F (95) for the M5Stack CardKB.": "バス上のキーボードのアドレスです。LilyGO T-Deck は 0x55 (85)、M5Stack CardKB は 0x5F (95) です。",
     "Has Backlight": "バックライトあり",
     "The keyboard has a backlight it controls itself, set over the bus (the LilyGO T-Deck's: brightness in register 0x01). Game code then sets it with I2CKeyboard::SetBacklight.": "キーボード自身が制御するバックライトがあり、バス経由で設定します (LilyGO T-Deck の場合はレジスタ 0x01 の明るさ)。ゲームのコードからは I2CKeyboard::SetBacklight で設定します。",
