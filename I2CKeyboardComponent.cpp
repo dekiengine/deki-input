@@ -28,7 +28,7 @@ void I2CKeyboardComponent::Setup(SetupCallback onComplete)
     {
         DEKI_LOG_ERROR("I2CKeyboardComponent: no I2C bus on port %d - add DekiI2c::I2CBusComponent before "
                        "this step in the boot scene. No keyboard.",
-                       (int)i2cPort);
+                       static_cast<int>(i2cPort));
         if (onComplete)
         {
             onComplete(true);
@@ -46,11 +46,18 @@ void I2CKeyboardComponent::Setup(SetupCallback onComplete)
                                      { return bus->Write(address, reg, &value, 1); });
     }
 
+    if (reportHeldKeys)
+    {
+        keyboard->UseKeyMatrix([bus, address](uint8_t* out, size_t count) { return bus->ReadRaw(address, out, count); },
+                               [bus, address](uint8_t reg, uint8_t value)
+                               { return bus->Write(address, reg, &value, 1); });
+    }
+
     if (keyboard->Initialize())
     {
         ::DekiInput::DekiInput::SetInput(std::move(keyboard), "I2CKeyboard");
-        DEKI_LOG_INFO("I2CKeyboardComponent: looking for a keyboard at 0x%02X on I2C port %d", (unsigned)address,
-                      (int)i2cPort);
+        DEKI_LOG_INFO("I2CKeyboardComponent: looking for a keyboard at 0x%02X on I2C port %d",
+                      static_cast<unsigned>(address), static_cast<int>(i2cPort));
     }
 
     // Nothing here has to outlive the boot scene: DekiInput owns the driver,

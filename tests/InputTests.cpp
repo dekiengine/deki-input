@@ -192,3 +192,103 @@ TEST(InputColliderHitTest, AZeroSizedColliderStillHitsItsOwnPoint)
     EXPECT_TRUE(box.collider->HitTest(0.0f, 0.0f));
     EXPECT_FALSE(box.collider->HitTest(1.0f, 0.0f));
 }
+
+// ---- Input sources and sessions ----
+
+#include <DekiInput.h>
+
+namespace
+{
+// An input source that keeps its event callback, so a test can send events.
+class FakeSource : public IDekiInput
+{
+public:
+    explicit FakeSource(bool* shutDown = nullptr) : m_ShutDown(shutDown) {}
+    bool Initialize() override { return true; }
+    void Shutdown() override
+    {
+        if (m_ShutDown)
+        {
+            *m_ShutDown = true;
+        }
+    }
+    void Update() override {}
+    void RegisterEventCallback(const InputEventCallback& callback) override { send = callback; }
+    bool IsInitialized() const override { return true; }
+    bool GetPointerPosition(int32_t*, int32_t*) const override { return false; }
+    bool IsKeyPressed(uint32_t) const override { return false; }
+
+    InputEventCallback send;
+
+private:
+    bool* m_ShutDown;
+};
+
+InputEvent KeyDown()
+{
+    InputEvent e{};
+    e.type = InputEventType::KeyDown;
+    e.pressed = true;
+    return e;
+}
+}  // namespace
+
+TEST(InputSources, OneCanBeRemovedByName)
+{
+    DekiInput::DekiInput::Shutdown();
+    bool shutDown = false;
+    DekiInput::DekiInput::SetInput(std::make_unique<FakeSource>(&shutDown), "Gone");
+    EXPECT_TRUE(DekiInput::DekiInput::RemoveInput("Gone"));
+    EXPECT_TRUE(shutDown);
+    EXPECT_EQ(DekiInput::DekiInput::GetInput("Gone"), nullptr);
+    EXPECT_FALSE(DekiInput::DekiInput::RemoveInput("Gone")) << "nothing left to remove";
+    DekiInput::DekiInput::Shutdown();
+}
+
+TEST(InputSources, WhatASessionAddedGoesWhenItEnds)
+{
+    DekiInput::DekiInput::Shutdown();
+    auto host = std::make_unique<FakeSource>();
+    FakeSource* hostSource = host.get();
+    DekiInput::DekiInput::SetInput(std::move(host), "Host");
+    int hostHeard = 0, gameHeard = 0;
+    DekiInput::DekiInput::RegisterEventCallback([&](const InputEvent&) { ++hostHeard; });
+
+    DekiInput::DekiInput::BeginSession();
+    bool gameShutDown = false;
+    DekiInput::DekiInput::SetInput(std::make_unique<FakeSource>(&gameShutDown), "Game");
+    DekiInput::DekiInput::RegisterEventCallback([&](const InputEvent&) { ++gameHeard; });
+    hostSource->send(KeyDown());
+    EXPECT_EQ(hostHeard, 1);
+    EXPECT_EQ(gameHeard, 1);
+
+    DekiInput::DekiInput::EndSession();
+    EXPECT_EQ(DekiInput::DekiInput::GetInput("Game"), nullptr);
+    EXPECT_TRUE(gameShutDown);
+    EXPECT_NE(DekiInput::DekiInput::GetInput("Host"), nullptr) << "the host's own source stays";
+    hostSource->send(KeyDown());
+    EXPECT_EQ(hostHeard, 2) << "the host's callback stays";
+    EXPECT_EQ(gameHeard, 1) << "the game's callback is gone";
+    DekiInput::DekiInput::Shutdown();
+}
+
+TEST(InputSources, AHostCallbackInASlotTheGameFreedStays)
+{
+    DekiInput::DekiInput::Shutdown();
+    auto host = std::make_unique<FakeSource>();
+    FakeSource* hostSource = host.get();
+    DekiInput::DekiInput::SetInput(std::move(host), "Host");
+
+    DekiInput::DekiInput::BeginSession();
+    const size_t game = DekiInput::DekiInput::RegisterEventCallback([](const InputEvent&) {});
+    DekiInput::DekiInput::UnregisterEventCallback(game);
+    DekiInput::DekiInput::EndSession();
+
+    int heard = 0;
+    DekiInput::DekiInput::RegisterEventCallback([&](const InputEvent&) { ++heard; });  // may reuse the slot
+    DekiInput::DekiInput::BeginSession();
+    DekiInput::DekiInput::EndSession();
+    hostSource->send(KeyDown());
+    EXPECT_EQ(heard, 1);
+    DekiInput::DekiInput::Shutdown();
+}

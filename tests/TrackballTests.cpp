@@ -292,3 +292,26 @@ TEST(TrackballPointer, SpinningFastCarriesFurtherPerStepThanRollingSlowly)
     const float fast = travel(2, 6);
     EXPECT_GT(fast, slow * 2.0f);
 }
+
+TEST(TrackballRoll, StepsAddUpUntilTakenInEitherMode)
+{
+    for (Trackball::Mode mode : { Trackball::Mode::Keys, Trackball::Mode::Pointer })
+    {
+        Bench b;
+        b.ball.SetMode(mode);
+        b.next.right = 3;
+        b.next.up = 1;
+        b.Frame();
+        b.next.left = 1;
+        b.next.down = 4;
+        b.Frame();
+
+        int32_t x = 0, y = 0;
+        b.ball.TakeRoll(x, y);
+        EXPECT_EQ(x, 2);
+        EXPECT_EQ(y, 3);
+        b.ball.TakeRoll(x, y);
+        EXPECT_EQ(x, 0) << "taken";
+        EXPECT_EQ(y, 0);
+    }
+}

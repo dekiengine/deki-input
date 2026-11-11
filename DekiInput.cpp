@@ -9,6 +9,9 @@ std::map<std::string, std::unique_ptr<IDekiInput>> DekiInput::s_ActiveInputs;
 std::vector<InputEventCallback> DekiInput::s_GlobalCallbacks;
 bool DekiInput::s_Initialized = false;
 bool DekiInput::s_ShouldExit = false;
+bool DekiInput::s_InSession = false;
+std::set<std::string> DekiInput::s_HostInputs;
+std::set<size_t> DekiInput::s_SessionCallbacks;
 
 bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& name)
 {
@@ -39,6 +42,65 @@ bool DekiInput::SetInput(std::unique_ptr<IDekiInput> input, const std::string& n
 
     DEKI_LOG_INTERNAL("DekiInput: Input '%s' set", name.c_str());
     return true;
+}
+
+bool DekiInput::RemoveInput(const std::string& name)
+{
+    auto it = s_ActiveInputs.find(name);
+    if (it == s_ActiveInputs.end())
+    {
+        return false;
+    }
+    if (it->second)
+    {
+        it->second->Shutdown();
+    }
+    s_ActiveInputs.erase(it);
+    return true;
+}
+
+void DekiInput::BeginSession()
+{
+    // Once: a scene opened during a session does not start another.
+    if (s_InSession)
+    {
+        return;
+    }
+    s_InSession = true;
+    s_HostInputs.clear();
+    for (const auto& entry : s_ActiveInputs)
+    {
+        s_HostInputs.insert(entry.first);
+    }
+    s_SessionCallbacks.clear();
+}
+
+void DekiInput::EndSession()
+{
+    if (!s_InSession)
+    {
+        return;
+    }
+    s_InSession = false;
+    const std::set<size_t> callbacks = s_SessionCallbacks;
+    for (size_t id : callbacks)
+    {
+        UnregisterEventCallback(id);
+    }
+    std::vector<std::string> added;
+    for (const auto& entry : s_ActiveInputs)
+    {
+        if (s_HostInputs.count(entry.first) == 0)
+        {
+            added.push_back(entry.first);
+        }
+    }
+    for (const std::string& name : added)
+    {
+        DEKI_LOG_INTERNAL("DekiInput: removing '%s', added while the game ran", name.c_str());
+        RemoveInput(name);
+    }
+    s_HostInputs.clear();
 }
 
 void DekiInput::Shutdown()
@@ -78,16 +140,28 @@ size_t DekiInput::RegisterEventCallback(const InputEventCallback& callback)
 {
     // A slot a removed callback left, else a new one: ids stay valid, as
     // they are positions.
+    size_t id = s_GlobalCallbacks.size();
     for (size_t i = 0; i < s_GlobalCallbacks.size(); ++i)
     {
         if (!s_GlobalCallbacks[i])
         {
-            s_GlobalCallbacks[i] = callback;
-            return i;
+            id = i;
+            break;
         }
     }
-    s_GlobalCallbacks.push_back(callback);
-    return s_GlobalCallbacks.size() - 1;
+    if (id == s_GlobalCallbacks.size())
+    {
+        s_GlobalCallbacks.push_back(callback);
+    }
+    else
+    {
+        s_GlobalCallbacks[id] = callback;
+    }
+    if (s_InSession)
+    {
+        s_SessionCallbacks.insert(id);
+    }
+    return id;
 }
 
 void DekiInput::UnregisterEventCallback(size_t id)
@@ -96,11 +170,14 @@ void DekiInput::UnregisterEventCallback(size_t id)
     {
         s_GlobalCallbacks[id] = nullptr;
     }
+    // Its slot may be reused, by the host as much as by the game.
+    s_SessionCallbacks.erase(id);
 }
 
 void DekiInput::ClearEventCallbacks()
 {
     s_GlobalCallbacks.clear();
+    s_SessionCallbacks.clear();
 }
 
 void DekiInput::Update()

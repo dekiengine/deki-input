@@ -8,6 +8,39 @@ breaking change bumps the minor across the editor, the engine and every
 package together, so a package with no changes of its own is still released
 alongside one that has them.
 
+## Unreleased
+
+### Added
+- `DekiInput::RemoveInput(name)`, which shuts down and removes one input source.
+- `DekiInput::BeginSession` and `EndSession`. Everything registered after a
+  session begins, sources and event callbacks, is removed when it ends. The
+  editor brackets Play mode with them, so what a game adds goes when it stops.
+- `Trackball::TakeRoll`: how far the ball rolled since the last call, in
+  either mode, so a game can steer with it while it moves the pointer.
+  `Trackball::Find()` gets the one a TrackballComponent set up.
+- **Report Held Keys** on the I2C Keyboard: the LilyGO T-Deck's keyboard
+  hands over its key matrix, so a key is down for as long as it is held and
+  comes up when it is let go, as a desktop keyboard's does. Off by default:
+  it needs keyboard firmware with the matrix mode (register 0x03).
+- `DispatchPointer` (`Deki::IInputSystem`): a host's pointer, in the game
+  screen's pixels, sent as an input event from a source named
+  "Injected pointer".
+
+### Fixed
+- Stopping the game and rebuilding no longer crashes the next run in
+  `IsKeyPressed`. An input source the game added stayed registered after Play,
+  and the rebuild unloaded its code.
+- In the editor, pointer events from an input source reach colliders. They
+  were dropped because the editor runs games without `Engine::Initialize`.
+- A click in the editor's Play view is an input event, as a touch is on a
+  device: `RegisterEventCallback` listeners hear `MouseButtonDown`. It used to
+  go to the colliders only.
+- A `TouchDown`, `TouchMove` or `TouchUp` event reaches colliders as the
+  matching Mouse event. No driver in the engine sends them (touch panels send
+  Mouse events, as `IDekiInput.h` now says), but one of your own may.
+- `UnregisterEventCallback`'s comment named an `OnDestroy` that components do
+  not have; a listener stops in its destructor.
+
 ## 0.22.0
 
 ### Changed

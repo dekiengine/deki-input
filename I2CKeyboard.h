@@ -21,6 +21,10 @@ namespace DekiInput
 /// a KeyDown and, on the next update, the matching KeyUp. IsKeyPressed is
 /// true in between: long enough for a game that polls once a frame to see it.
 ///
+/// The T-Deck's keyboard can also hand over its whole key matrix instead
+/// (UseKeyMatrix). Keys are then down for as long as they are held, as on a
+/// desktop keyboard, which a game needs to walk while a key is held.
+///
 /// How a byte is read is passed in, so the behaviour can be tested without a
 /// bus. I2CKeyboardComponent supplies the I2C one.
 class DEKI_INPUT_API I2CKeyboard : public IDekiInput
@@ -65,6 +69,21 @@ public:
     /// Sets the backlight brightness, 0 to 255. False when there is none or
     /// the keyboard did not answer; the level asked for is kept either way.
     bool SetBacklight(uint8_t level);
+
+    /// Reads `count` bytes. False when the device did not answer.
+    using ReadBytes = std::function<bool(uint8_t* out, size_t count)>;
+
+    /// The LilyGO T-Deck's keyboard only: once found, it is switched to
+    /// handing over its key matrix (register 0x03) and read whole each
+    /// update, so a key is down from when it is pressed until it is let go.
+    /// Needs keyboard firmware with that mode; with an older one the bytes are
+    /// characters, not the matrix. Set before Initialize.
+    void UseKeyMatrix(ReadBytes read, WriteRegister write);
+    bool UsesKeyMatrix() const { return static_cast<bool>(m_ReadMatrix); }
+
+    static constexpr uint8_t kMatrixModeRegister = 0x03;
+    static constexpr int kMatrixColumns = 5;
+    static constexpr int kMatrixRows = 7;
     uint8_t GetBacklight() const { return m_Backlight; }
 
     static constexpr uint8_t kBacklightRegister = 0x01;
@@ -80,6 +99,14 @@ public:
 private:
     void Emit(InputEventType type, uint32_t key, uint32_t character);
     void Search(uint32_t now);
+    void UpdateMatrix();
+    void ReleaseAll();
+
+    ReadBytes m_ReadMatrix;
+    WriteRegister m_WriteMatrixRegister;
+    bool m_MatrixModeSet = false;
+    // Keys mode of the matrix: what each held position pressed, 0 = up.
+    uint32_t m_HeldKey[kMatrixColumns][kMatrixRows] = {};
 
     ReadByte m_Read;
     Probe m_Probe;

@@ -63,6 +63,55 @@ private:
 
 constexpr const char* kInjectedKeyboardName = "Injected";
 
+// A pointer fed by DispatchPointer(): the editor's Play view, standing in for
+// a touch panel or a mouse. Its events go through DekiInput like a driver's.
+class InjectedPointer : public IDekiInput
+{
+public:
+    bool Initialize() override { return true; }
+    void Shutdown() override {}
+    void Update() override {}
+    void RegisterEventCallback(const InputEventCallback& callback) override { m_Callback = callback; }
+    bool IsInitialized() const override { return true; }
+    bool GetPointerPosition(int32_t* x, int32_t* y) const override
+    {
+        if (!m_Known || !x || !y)
+        {
+            return false;
+        }
+        *x = m_X;
+        *y = m_Y;
+        return true;
+    }
+    bool IsKeyPressed(uint32_t) const override { return false; }
+
+    void Send(int32_t x, int32_t y, bool down, bool move, bool up)
+    {
+        m_X = x;
+        m_Y = y;
+        m_Known = true;
+        if (!m_Callback)
+        {
+            return;
+        }
+        InputEvent event{};
+        event.type = down ? InputEventType::MouseButtonDown
+                          : (up ? InputEventType::MouseButtonUp : InputEventType::MouseMove);
+        event.x = x;
+        event.y = y;
+        event.pressed = down;
+        (void)move;
+        m_Callback(event);
+    }
+
+private:
+    InputEventCallback m_Callback;
+    int32_t m_X = 0, m_Y = 0;
+    bool m_Known = false;
+};
+
+constexpr const char* kInjectedPointerName = "Injected pointer";
+
 }  // namespace
 
 DekiInputSystem::DekiInputSystem()
@@ -127,6 +176,22 @@ void DekiInputSystem::DispatchKey(uint32_t key, bool down)
     static_cast<InjectedKeyboard*>(driver)->SetKey(key, down);
 }
 
+bool DekiInputSystem::DispatchPointer(int32_t screenX, int32_t screenY, bool down, bool move, bool up)
+{
+    auto* driver = DekiInput::GetInput(kInjectedPointerName);
+    if (!driver)
+    {
+        DekiInput::SetInput(std::make_unique<InjectedPointer>(), kInjectedPointerName);
+        driver = DekiInput::GetInput(kInjectedPointerName);
+        if (!driver)
+        {
+            return false;
+        }
+    }
+    static_cast<InjectedPointer*>(driver)->Send(screenX, screenY, down, move, up);
+    return true;
+}
+
 bool DekiInputSystem::ShouldExit() const
 {
     return DekiInput::ShouldExit();
@@ -134,21 +199,19 @@ bool DekiInputSystem::ShouldExit() const
 
 void DekiInputSystem::OnInputEvent(const InputEvent& event)
 {
+    // A scene to send it to is all this needs: the editor runs games without
+    // Engine::Initialize.
     Deki::Engine& engine = Deki::Engine::GetInstance();
-    if (!engine.IsInitialized())
-    {
-        return;
-    }
-
     Deki::Scene* scene = engine.GetRootScene();
     if (!scene)
     {
         return;
     }
 
-    bool isDown = (event.type == InputEventType::MouseButtonDown);
-    bool isMove = (event.type == InputEventType::MouseMove);
-    bool isUp = (event.type == InputEventType::MouseButtonUp);
+    // A Touch event is taken as the Mouse event it matches.
+    bool isDown = (event.type == InputEventType::MouseButtonDown || event.type == InputEventType::TouchDown);
+    bool isMove = (event.type == InputEventType::MouseMove || event.type == InputEventType::TouchMove);
+    bool isUp = (event.type == InputEventType::MouseButtonUp || event.type == InputEventType::TouchUp);
 
     if (!isDown && !isMove && !isUp)
     {

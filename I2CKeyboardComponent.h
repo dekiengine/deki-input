@@ -44,6 +44,12 @@ public:
                  "in register 0x01). Game code then sets it with I2CKeyboard::SetBacklight.")
     bool hasBacklight = false;
 
+    DEKI_EXPORT
+    DEKI_TOOLTIP("The LilyGO T-Deck's keyboard: read its whole key matrix, so a key is down for as long as it is held, "
+                 "as a desktop keyboard's is. A game can then walk while a key is held. Needs keyboard firmware with "
+                 "the matrix mode (register 0x03); off, each typed key is down for one frame.")
+    bool reportHeldKeys = false;
+
     void Setup(SetupCallback onComplete) override;
     const char* GetSetupName() const override { return "I2C Keyboard"; }
 };

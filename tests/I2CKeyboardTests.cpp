@@ -252,3 +252,121 @@ TEST(I2CKeyboard, TheBacklightIsWrittenToItsRegisterWhenThereIsOne)
     EXPECT_EQ(writes[0].second, 200);
     EXPECT_EQ(lit.GetBacklight(), 200);
 }
+
+// ---- The T-Deck keyboard's key matrix ----
+
+namespace
+{
+// The matrix as the keyboard hands it over: one byte per column, a bit per row.
+struct MatrixBench
+{
+    uint8_t columns[I2CKeyboard::kMatrixColumns] = {};
+    std::vector<std::pair<uint8_t, uint8_t>> writes;
+    std::vector<InputEvent> events;
+    uint32_t now = 0;
+    I2CKeyboard keyboard;
+
+    MatrixBench()
+        : keyboard([](uint8_t& out) { out = 0; return true; }, []() { return true; }, [this]() { return now; })
+    {
+        keyboard.UseKeyMatrix(
+            [this](uint8_t* out, size_t count)
+            {
+                for (size_t i = 0; i < count; ++i)
+                {
+                    out[i] = columns[i];
+                }
+                return true;
+            },
+            [this](uint8_t reg, uint8_t value)
+            {
+                writes.emplace_back(reg, value);
+                return true;
+            });
+        keyboard.RegisterEventCallback([this](const InputEvent& e) { events.push_back(e); });
+        EXPECT_TRUE(keyboard.Initialize());
+        Frame();  // finds it
+    }
+    void Set(int column, int row, bool down)
+    {
+        columns[column] = static_cast<uint8_t>(down ? (columns[column] | (1u << row)) : (columns[column] & ~(1u << row)));
+    }
+    void Frame()
+    {
+        now += 16;
+        keyboard.Update();
+    }
+};
+}  // namespace
+
+TEST(I2CKeyboardMatrix, AKeyIsDownUntilItIsLetGo)
+{
+    MatrixBench b;
+    b.Set(0, 1, true);  // w
+    b.Frame();
+    ASSERT_FALSE(b.writes.empty());
+    EXPECT_EQ(b.writes.front().first, I2CKeyboard::kMatrixModeRegister) << "switched to the matrix first";
+    ASSERT_EQ(b.events.size(), 1u);
+    EXPECT_EQ(b.events[0].type, InputEventType::KeyDown);
+    EXPECT_EQ(b.events[0].key, Keys::ForCharacter('w'));
+    EXPECT_EQ(b.events[0].character, static_cast<uint32_t>('w'));
+
+    for (int i = 0; i < 10; ++i)
+    {
+        b.Frame();
+        EXPECT_TRUE(b.keyboard.IsKeyPressed(Keys::ForCharacter('w'))) << "held, frame " << i;
+    }
+    EXPECT_EQ(b.events.size(), 1u) << "no repeats while held";
+
+    b.Set(0, 1, false);
+    b.Frame();
+    ASSERT_EQ(b.events.size(), 2u);
+    EXPECT_EQ(b.events[1].type, InputEventType::KeyUp);
+    EXPECT_EQ(b.events[1].key, Keys::ForCharacter('w'));
+    EXPECT_FALSE(b.keyboard.IsKeyPressed(Keys::ForCharacter('w')));
+}
+
+TEST(I2CKeyboardMatrix, ShiftSymEnterAndBackspaceAsTheFirmwareTypesThem)
+{
+    MatrixBench b;
+    b.Set(1, 6, true);  // shift
+    b.Set(0, 0, true);  // q
+    b.Frame();
+    ASSERT_EQ(b.events.size(), 1u) << "shift itself types nothing";
+    EXPECT_EQ(b.events[0].character, static_cast<uint32_t>('Q'));
+    EXPECT_EQ(b.events[0].key, Keys::ForCharacter('q'));
+
+    b.events.clear();
+    b.Set(1, 6, false);
+    b.Set(0, 0, false);
+    b.Set(0, 2, true);  // sym
+    b.Set(0, 1, true);  // w under sym is 1
+    b.Set(3, 3, true);  // enter
+    b.Set(4, 3, true);  // backspace
+    b.Frame();
+    bool one = false, enter = false, backspace = false;
+    for (const InputEvent& e : b.events)
+    {
+        if (e.type != InputEventType::KeyDown)
+        {
+            continue;
+        }
+        one |= e.character == '1' && e.key == Keys::ForCharacter('1');
+        enter |= e.key == Keys::Enter && e.character == 0;
+        backspace |= e.key == Keys::Backspace && e.character == 0;
+    }
+    EXPECT_TRUE(one);
+    EXPECT_TRUE(enter);
+    EXPECT_TRUE(backspace);
+}
+
+TEST(I2CKeyboardMatrix, TwoKeysCanBeHeldTogether)
+{
+    MatrixBench b;
+    b.Set(0, 1, true);  // w
+    b.Set(1, 1, true);  // s
+    b.Frame();
+    b.Frame();
+    EXPECT_TRUE(b.keyboard.IsKeyPressed(Keys::ForCharacter('w')));
+    EXPECT_TRUE(b.keyboard.IsKeyPressed(Keys::ForCharacter('s')));
+}

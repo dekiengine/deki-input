@@ -68,6 +68,17 @@ public:
     /// acceleration.
     void SetAcceleration(float factor) { m_Acceleration = factor > 1.0f ? factor : 1.0f; }
 
+    /// The name TrackballComponent registers it under.
+    static constexpr const char* kSourceName = "Trackball";
+
+    /// The trackball a TrackballComponent set up, or nullptr when there is none.
+    static Trackball* Find();
+
+    /// How far the ball rolled since the last call, in steps, right and down
+    /// positive. In either mode: a game can steer with the ball while it also
+    /// moves the pointer.
+    void TakeRoll(int32_t& outX, int32_t& outY);
+
     bool Initialize() override;
     void Shutdown() override;
     void Update() override;
@@ -109,6 +120,8 @@ private:
     bool m_Pressed = false;
     // Keys mode: the arrows put down last update, to be released this one.
     std::vector<uint32_t> m_DownKeys;
+    // Steps rolled since TakeRoll last took them.
+    int32_t m_RollX = 0, m_RollY = 0;
 };
 
 }  // namespace DekiInput

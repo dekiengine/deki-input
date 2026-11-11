@@ -98,7 +98,7 @@ void TrackballComponent::Setup(SetupCallback onComplete)
 
     if (ball->Initialize())
     {
-        ::DekiInput::DekiInput::SetInput(std::move(ball), "Trackball");
+        ::DekiInput::DekiInput::SetInput(std::move(ball), ::DekiInput::Trackball::kSourceName);
         DEKI_LOG_INFO("TrackballComponent: trackball on GPIO %d/%d/%d/%d, click %d, as %s", up, down, left, right,
                       click, mode == TrackballMode::Pointer ? "a pointer" : "arrow keys");
     }

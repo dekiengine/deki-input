@@ -6,6 +6,7 @@
 #include <deki/interop/Plugin.h>
 #include "InputCollider.h"
 #include "DekiInputInit.h"
+#include "DekiInput.h"
 #include <deki/Engine.h>
 #include <deki/reflection/ComponentRegistry.h>
 #include <deki/reflection/ComponentFactory.h>
@@ -98,6 +99,18 @@ extern "C"
     DEKI_PLUGIN_API void DekiPluginRegisterComponents(void)
     {
         DekiInputEnsureRegistered();
+    }
+
+    // Play mode in the editor: what the game registers goes when it stops,
+    // while the game's code is still loaded to free it.
+    DEKI_PLUGIN_API void DekiPluginOnPlayModeStart(void* /*scene*/)
+    {
+        DekiInput::DekiInput::BeginSession();
+    }
+
+    DEKI_PLUGIN_API void DekiPluginOnPlayModeStop(void)
+    {
+        DekiInput::DekiInput::EndSession();
     }
 
 #endif  // DEKI_PLUGIN_EXPORTS

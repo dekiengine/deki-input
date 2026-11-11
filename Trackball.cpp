@@ -1,4 +1,5 @@
 #include "Trackball.h"
+#include "DekiInput.h"
 #include "Keys.h"
 
 #include <deki/Time.h>
@@ -113,6 +114,8 @@ void Trackball::Update()
     m_DownKeys.clear();
 
     const Sample s = m_Read();
+    m_RollX += static_cast<int32_t>(s.right) - static_cast<int32_t>(s.left);
+    m_RollY += static_cast<int32_t>(s.down) - static_cast<int32_t>(s.up);
     if (m_Mode == Mode::Keys)
     {
         UpdateKeys(s);
@@ -121,6 +124,20 @@ void Trackball::Update()
     {
         UpdatePointer(s);
     }
+}
+
+Trackball* Trackball::Find()
+{
+    // Only a TrackballComponent registers under this name, with a Trackball.
+    return static_cast<Trackball*>(DekiInput::GetInput(kSourceName));
+}
+
+void Trackball::TakeRoll(int32_t& outX, int32_t& outY)
+{
+    outX = m_RollX;
+    outY = m_RollY;
+    m_RollX = 0;
+    m_RollY = 0;
 }
 
 void Trackball::UpdateKeys(const Sample& s)

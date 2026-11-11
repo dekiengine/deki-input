@@ -43,6 +43,7 @@ public:
     /// DekiInput::IsKeyPressed() counts injected keys exactly like keys from
     /// a real driver (SDL3 on the desktop simulator).
     void DispatchKey(uint32_t key, bool down) override;
+    bool DispatchPointer(int32_t screenX, int32_t screenY, bool down, bool move, bool up) override;
 
     bool IsInitialized() const override { return m_Initialized; }
 

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 #include "IDekiInput.h"
 
@@ -23,6 +24,11 @@ private:
     static std::vector<InputEventCallback> s_GlobalCallbacks;
     static bool s_Initialized;
     static bool s_ShouldExit;
+    // BeginSession .. EndSession: the sources there were at its start, and
+    // the callbacks registered since.
+    static bool s_InSession;
+    static std::set<std::string> s_HostInputs;
+    static std::set<size_t> s_SessionCallbacks;
 
 public:
     /// Adds an initialized input source under `name` and takes ownership of
@@ -30,8 +36,19 @@ public:
     /// a null input.
     static bool SetInput(std::unique_ptr<IDekiInput> input, const std::string& name);
 
+    /// Shuts down and removes the input source registered under `name`.
+    /// Returns false when there is none.
+    static bool RemoveInput(const std::string& name);
+
     /// Shuts down and removes every input source and callback.
     static void Shutdown();
+
+    /// What is registered when a session begins is the host's; EndSession
+    /// removes every input source and callback added after that. The editor
+    /// brackets Play mode with them, so what a game added does not outlive
+    /// the game, or the code it lives in when packages are rebuilt.
+    static void BeginSession();
+    static void EndSession();
 
     /// The input source registered under `name`, or nullptr.
     static IDekiInput* GetInput(const std::string& name);
@@ -41,9 +58,9 @@ public:
     static size_t RegisterEventCallback(const InputEventCallback& callback);
 
     /// Removes the callback RegisterEventCallback returned `id` for. A
-    /// component that listens must stop before it is destroyed (OnDestroy),
-    /// or the callback is called on a freed object. Safe from inside a
-    /// callback, including the one being removed.
+    /// component that listens must stop in its destructor, or the callback is
+    /// called on a freed object. Safe from inside a callback, including the
+    /// one being removed.
     static void UnregisterEventCallback(size_t id);
 
     /// Removes every global event callback. Call it before freeing a DLL that

@@ -7,6 +7,10 @@
 namespace DekiInput
 {
 
+// A touch panel, a trackball's pointer and the editor's Play view all send the
+// Mouse events, so one handler covers a mouse and a finger. The Touch events
+// are sent by no driver in the engine; colliders take one like the Mouse event
+// it matches, for a driver of your own that sends them.
 enum class InputEventType
 {
     MouseMove,
