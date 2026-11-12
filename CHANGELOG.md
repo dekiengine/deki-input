@@ -27,6 +27,12 @@ alongside one that has them.
   "Injected pointer".
 
 ### Fixed
+- **A component that never started no longer silences every collider.** Callback ids from
+  `RegisterEventCallback` are counted from 1, and `UnregisterEventCallback(0)` removes nothing. Ids were
+  positions from 0, and 0 was the input system's own callback, the one that sends pointer events to Input
+  Colliders: a component keeping its id in a member that starts at 0, destroyed before `Start` (the editor
+  does that each time it loads a scene to edit), removed it, and no collider got a tap until the editor
+  was restarted.
 - Stopping the game and rebuilding no longer crashes the next run in
   `IsKeyPressed`. An input source the game added stayed registered after Play,
   and the rebuild unloaded its code.

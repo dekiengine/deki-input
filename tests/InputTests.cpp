@@ -203,7 +203,10 @@ namespace
 class FakeSource : public IDekiInput
 {
 public:
-    explicit FakeSource(bool* shutDown = nullptr) : m_ShutDown(shutDown) {}
+    explicit FakeSource(bool* shutDown = nullptr)
+        : m_ShutDown(shutDown)
+    {
+    }
     bool Initialize() override { return true; }
     void Shutdown() override
     {
@@ -269,6 +272,29 @@ TEST(InputSources, WhatASessionAddedGoesWhenItEnds)
     hostSource->send(KeyDown());
     EXPECT_EQ(hostHeard, 2) << "the host's callback stays";
     EXPECT_EQ(gameHeard, 1) << "the game's callback is gone";
+    DekiInput::DekiInput::Shutdown();
+}
+
+// A component that listens keeps its id in a member that starts at 0, and its
+// destructor removes it whether it ever started or not.
+TEST(InputSources, AnIdThatWasNeverSetRemovesNothing)
+{
+    DekiInput::DekiInput::Shutdown();
+    auto source = std::make_unique<FakeSource>();
+    FakeSource* fake = source.get();
+    DekiInput::DekiInput::SetInput(std::move(source), "Fake");
+
+    int heard = 0;
+    const size_t first = DekiInput::DekiInput::RegisterEventCallback([&](const InputEvent&) { ++heard; });
+    EXPECT_NE(first, 0u);
+
+    DekiInput::DekiInput::UnregisterEventCallback(0);
+    fake->send(InputEvent{});
+    EXPECT_EQ(heard, 1) << "the first callback stays";
+
+    DekiInput::DekiInput::UnregisterEventCallback(first);
+    fake->send(InputEvent{});
+    EXPECT_EQ(heard, 1);
     DekiInput::DekiInput::Shutdown();
 }
 

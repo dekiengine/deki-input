@@ -139,24 +139,26 @@ IDekiInput* DekiInput::GetInput(const std::string& name)
 size_t DekiInput::RegisterEventCallback(const InputEventCallback& callback)
 {
     // A slot a removed callback left, else a new one: ids stay valid, as
-    // they are positions.
-    size_t id = s_GlobalCallbacks.size();
+    // they are positions, counted from 1. 0 is no callback, so an id that
+    // was never set removes nothing.
+    size_t slot = s_GlobalCallbacks.size();
     for (size_t i = 0; i < s_GlobalCallbacks.size(); ++i)
     {
         if (!s_GlobalCallbacks[i])
         {
-            id = i;
+            slot = i;
             break;
         }
     }
-    if (id == s_GlobalCallbacks.size())
+    if (slot == s_GlobalCallbacks.size())
     {
         s_GlobalCallbacks.push_back(callback);
     }
     else
     {
-        s_GlobalCallbacks[id] = callback;
+        s_GlobalCallbacks[slot] = callback;
     }
+    const size_t id = slot + 1;
     if (s_InSession)
     {
         s_SessionCallbacks.insert(id);
@@ -166,9 +168,9 @@ size_t DekiInput::RegisterEventCallback(const InputEventCallback& callback)
 
 void DekiInput::UnregisterEventCallback(size_t id)
 {
-    if (id < s_GlobalCallbacks.size())
+    if (id >= 1 && id <= s_GlobalCallbacks.size())
     {
-        s_GlobalCallbacks[id] = nullptr;
+        s_GlobalCallbacks[id - 1] = nullptr;
     }
     // Its slot may be reused, by the host as much as by the game.
     s_SessionCallbacks.erase(id);
