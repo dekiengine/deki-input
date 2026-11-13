@@ -50,5 +50,7 @@
     "Input": "输入",
     "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "读取每次 I2C 读取返回一个输入字符的键盘：如 LilyGO T-Deck 的键盘、M5Stack CardKB。",
     "I2C Keyboard": "I2C 键盘",
-    "Trackball": "轨迹球"
+    "Trackball": "轨迹球",
+    "Report Held Keys": "报告按住的键",
+    "The LilyGO T-Deck's keyboard: read its whole key matrix, so a key is down for as long as it is held, as a desktop keyboard's is. A game can then walk while a key is held. Needs keyboard firmware with the matrix mode (register 0x03); off, each typed key is down for one frame.": "LilyGO T-Deck 的键盘：读取整个按键矩阵，使按键在按住期间一直处于按下状态，与桌面键盘一样。这样游戏就能在按住键时持续行走。需要带矩阵模式（寄存器 0x03）的键盘固件；关闭时，每个输入的键只按下一帧。"
 }

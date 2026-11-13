@@ -50,5 +50,7 @@
     "Input": "입력",
     "Reads a keyboard that hands over one typed character per I2C read: the LilyGO T-Deck's, the M5Stack CardKB.": "I2C로 한 번 읽을 때마다 입력된 문자 하나를 넘겨주는 키보드를 읽습니다. LilyGO T-Deck의 키보드와 M5Stack CardKB가 여기에 해당합니다.",
     "I2C Keyboard": "I2C 키보드",
-    "Trackball": "트랙볼"
+    "Trackball": "트랙볼",
+    "Report Held Keys": "누르고 있는 키 보고",
+    "The LilyGO T-Deck's keyboard: read its whole key matrix, so a key is down for as long as it is held, as a desktop keyboard's is. A game can then walk while a key is held. Needs keyboard firmware with the matrix mode (register 0x03); off, each typed key is down for one frame.": "LilyGO T-Deck의 키보드: 키 매트릭스 전체를 읽어, 데스크톱 키보드처럼 키를 누르고 있는 동안 계속 눌린 상태가 됩니다. 그러면 게임에서 키를 누르고 있는 동안 걷게 할 수 있습니다. 매트릭스 모드(register 0x03)가 있는 키보드 펌웨어가 필요합니다. 끄면 입력한 키는 한 프레임 동안만 눌린 상태가 됩니다."
 }
