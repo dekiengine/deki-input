@@ -95,8 +95,8 @@ public:
             return;
         }
         InputEvent event{};
-        event.type = down ? InputEventType::MouseButtonDown
-                          : (up ? InputEventType::MouseButtonUp : InputEventType::MouseMove);
+        event.type =
+            down ? InputEventType::MouseButtonDown : (up ? InputEventType::MouseButtonUp : InputEventType::MouseMove);
         event.x = x;
         event.y = y;
         event.pressed = down;
@@ -111,6 +111,48 @@ private:
 };
 
 constexpr const char* kInjectedPointerName = "Injected pointer";
+
+// Sticks fed by DispatchStick(): a host's gamepad (the editor's Play view).
+class InjectedSticks : public IDekiInput
+{
+public:
+    bool Initialize() override { return true; }
+    void Shutdown() override {}
+    void Update() override {}
+    void RegisterEventCallback(const InputEventCallback&) override {}
+    bool IsInitialized() const override { return true; }
+    bool GetPointerPosition(int32_t*, int32_t*) const override { return false; }
+    bool IsKeyPressed(uint32_t) const override { return false; }
+
+    bool GetStick(int stick, float* x, float* y) const override
+    {
+        if (stick < 0 || stick >= kSticks || !m_Has[stick])
+        {
+            return false;
+        }
+        *x = m_X[stick];
+        *y = m_Y[stick];
+        return true;
+    }
+
+    void Set(int stick, float x, float y)
+    {
+        if (stick >= 0 && stick < kSticks)
+        {
+            m_X[stick] = x;
+            m_Y[stick] = y;
+            m_Has[stick] = true;
+        }
+    }
+
+private:
+    static constexpr int kSticks = 2;
+    float m_X[kSticks] = {};
+    float m_Y[kSticks] = {};
+    bool m_Has[kSticks] = {};
+};
+
+constexpr const char* kInjectedSticksName = "Injected sticks";
 
 }  // namespace
 
@@ -190,6 +232,21 @@ bool DekiInputSystem::DispatchPointer(int32_t screenX, int32_t screenY, bool dow
     }
     static_cast<InjectedPointer*>(driver)->Send(screenX, screenY, down, move, up);
     return true;
+}
+
+void DekiInputSystem::DispatchStick(int stick, float x, float y)
+{
+    auto* driver = DekiInput::GetInput(kInjectedSticksName);
+    if (!driver)
+    {
+        DekiInput::SetInput(std::make_unique<InjectedSticks>(), kInjectedSticksName);
+        driver = DekiInput::GetInput(kInjectedSticksName);
+        if (!driver)
+        {
+            return;
+        }
+    }
+    static_cast<InjectedSticks*>(driver)->Set(stick, x, y);
 }
 
 bool DekiInputSystem::ShouldExit() const

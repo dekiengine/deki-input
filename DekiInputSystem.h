@@ -44,6 +44,8 @@ public:
     /// a real driver (SDL3 on the desktop simulator).
     void DispatchKey(uint32_t key, bool down) override;
     bool DispatchPointer(int32_t screenX, int32_t screenY, bool down, bool move, bool up) override;
+    /// Feeds a host's analog stick, read back through DekiInput::GetStick.
+    void DispatchStick(int stick, float x, float y) override;
 
     bool IsInitialized() const override { return m_Initialized; }
 

@@ -318,3 +318,58 @@ TEST(InputSources, AHostCallbackInASlotTheGameFreedStays)
     EXPECT_EQ(heard, 1);
     DekiInput::DekiInput::Shutdown();
 }
+
+// ---- Sticks ----
+
+namespace
+{
+// A source with one stick, pushed where a test says.
+class FakeStick : public FakeSource
+{
+public:
+    FakeStick(float x, float y)
+        : m_X(x),
+          m_Y(y)
+    {
+    }
+    bool GetStick(int stick, float* x, float* y) const override
+    {
+        if (stick != 0)
+        {
+            return false;
+        }
+        *x = m_X;
+        *y = m_Y;
+        return true;
+    }
+
+private:
+    float m_X;
+    float m_Y;
+};
+}  // namespace
+
+TEST(InputSticks, NoSourceWithAStickReadsAsAtRest)
+{
+    DekiInput::DekiInput::Shutdown();
+    DekiInput::DekiInput::SetInput(std::make_unique<FakeSource>(), "Keys only");
+    float x = 9.0f, y = 9.0f;
+    EXPECT_FALSE(DekiInput::DekiInput::GetStick(0, &x, &y));
+    EXPECT_EQ(x, 0.0f);
+    EXPECT_EQ(y, 0.0f);
+    DekiInput::DekiInput::Shutdown();
+}
+
+TEST(InputSticks, TheStickPushedFurthestIsTheOneRead)
+{
+    // A handheld's stick at rest and a gamepad pushed up-right: the pad's.
+    DekiInput::DekiInput::Shutdown();
+    DekiInput::DekiInput::SetInput(std::make_unique<FakeStick>(0.02f, -0.01f), "Handheld");
+    DekiInput::DekiInput::SetInput(std::make_unique<FakeStick>(0.7f, 0.6f), "Pad");
+    float x = 0.0f, y = 0.0f;
+    EXPECT_TRUE(DekiInput::DekiInput::GetStick(0, &x, &y));
+    EXPECT_EQ(x, 0.7f);
+    EXPECT_EQ(y, 0.6f);
+    EXPECT_FALSE(DekiInput::DekiInput::GetStick(1, &x, &y)) << "neither has a right stick";
+    DekiInput::DekiInput::Shutdown();
+}

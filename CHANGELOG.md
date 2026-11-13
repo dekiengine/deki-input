@@ -11,6 +11,13 @@ alongside one that has them.
 ## Unreleased
 
 ### Added
+- **Sticks.** `DekiInput::GetStick(stick, &x, &y)` says where an analog
+  stick points (0 the left, 1 the right): x and y from -1 to 1, right and
+  up positive, from the input source that has it pushed furthest. A driver
+  reports its sticks with `IDekiInput::GetStick`, which reports none by
+  default, so drivers without sticks need no change; a host feeds one
+  through `IInputSystem::DispatchStick`. Sticks still send the arrow keys
+  too, for games that only read keys.
 - `DekiInput::RemoveInput(name)`, which shuts down and removes one input source.
 - `DekiInput::BeginSession` and `EndSession`. Everything registered after a
   session begins, sources and event callbacks, is removed when it ends. The

@@ -73,6 +73,17 @@ public:
 
     /// True when `key` (see Keys.h) is down.
     virtual bool IsKeyPressed(uint32_t key) const = 0;
+
+    /// Where analog stick `stick` points (0 the left, 1 the right): x and y
+    /// each from -1 to 1, right and up positive, about 0 at rest. False when
+    /// this driver has no such stick, as by default.
+    virtual bool GetStick(int stick, float* x, float* y) const
+    {
+        (void)stick;
+        (void)x;
+        (void)y;
+        return false;
+    }
 };
 
 }  // namespace DekiInput

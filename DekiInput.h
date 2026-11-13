@@ -80,6 +80,13 @@ public:
     /// True when `key` (see Keys.h) is down on any active input source.
     static bool IsKeyPressed(uint32_t key);
 
+    /// Where analog stick `stick` points (0 the left, 1 the right), from the
+    /// input source that has it pushed furthest: x and y each from -1 to 1,
+    /// right and up positive, about 0 at rest. A stick also sends the arrow
+    /// keys, for games that only read keys. False, with 0 and 0, when no
+    /// source has that stick.
+    static bool GetStick(int stick, float* x, float* y);
+
     /// True once any input source has sent a quit event.
     static bool ShouldExit();
 

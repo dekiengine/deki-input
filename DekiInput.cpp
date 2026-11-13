@@ -220,6 +220,39 @@ bool DekiInput::GetPointerPosition(int32_t* x, int32_t* y)
     return false;
 }
 
+bool DekiInput::GetStick(int stick, float* x, float* y)
+{
+    float bestX = 0.0f;
+    float bestY = 0.0f;
+    bool found = false;
+    if (s_Initialized)
+    {
+        for (auto& [name, input] : s_ActiveInputs)
+        {
+            float sx = 0.0f;
+            float sy = 0.0f;
+            if (input && input->IsInitialized() && input->GetStick(stick, &sx, &sy))
+            {
+                if (!found || sx * sx + sy * sy > bestX * bestX + bestY * bestY)
+                {
+                    bestX = sx;
+                    bestY = sy;
+                }
+                found = true;
+            }
+        }
+    }
+    if (x)
+    {
+        *x = bestX;
+    }
+    if (y)
+    {
+        *y = bestY;
+    }
+    return found;
+}
+
 bool DekiInput::IsKeyPressed(uint32_t key)
 {
     if (!s_Initialized)
