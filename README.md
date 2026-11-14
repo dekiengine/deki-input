@@ -33,6 +33,20 @@ Drivers report through this package: `deki-sdl3-integration` for a desktop
 keyboard and mouse, `deki-lovyangfx-integration` for a touch panel, and this
 package's own for a keyboard or trackball wired to a board (below).
 
+## Sticks
+
+`DekiInput::GetStick(stick, &x, &y)` says where an analog stick points: stick 0
+is the left one, 1 the right, and x and y go from -1 to 1 with right and up
+positive. It takes the source that has the stick pushed furthest, and returns
+false when no source has that stick. A handheld's sticks
+(`deki-anbernic-boards`) and a desktop gamepad (`deki-sdl3-integration`) report
+them; they also send the arrow keys, for a game that reads only keys.
+
+```cpp
+float x = 0.0f, y = 0.0f;
+if (DekiInput::DekiInput::GetStick(0, &x, &y)) Walk(x, y);
+```
+
 ## Features
 
 | Feature | Components | Needs |
